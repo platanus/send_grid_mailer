@@ -1,3 +1,4 @@
+require "sendgrid-ruby"
 require "send_grid_mailer/engine"
 
 module SendGridMailer

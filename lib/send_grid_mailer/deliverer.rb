@@ -1,5 +1,7 @@
 module SendGridMailer
   class Deliverer
+    include SendGrid
+
     attr_accessor :settings
 
     def initialize(settings)

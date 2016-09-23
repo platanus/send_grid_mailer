@@ -3,6 +3,7 @@ PATH
   specs:
     send_grid_mailer (0.0.1)
       rails (~> 4.2, >= 4.2.0)
+      sendgrid-ruby (~> 4.0, >= 4.0.4)
 
 GEM
   remote: https://rubygems.org/
@@ -153,6 +154,9 @@ GEM
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
     ruby_dep (1.4.0)
+    ruby_http_client (3.0.0)
+    sendgrid-ruby (4.0.4)
+      ruby_http_client (~> 3.0.0)
     shellany (0.0.1)
     slop (3.6.0)
     sprockets (3.7.0)
