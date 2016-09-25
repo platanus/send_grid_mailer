@@ -101,6 +101,8 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-rails (0.3.4)
+      pry (>= 0.9.10)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -179,6 +181,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.6.0)
   guard-rspec (~> 4.7)
   pry
+  pry-rails
   rspec-rails (~> 3.4.0)
   send_grid_mailer!
   sqlite3
