@@ -53,5 +53,15 @@ describe Mail::Message do
 
       expect(subject.sg_request_body).to eq(result)
     end
+
+    it "adds template_id from hash params" do
+      subject[:template_id] = "X"
+      expect(subject.sg_request_body).to eq("template_id" => "X")
+    end
+
+    it "adds template_id from accessor" do
+      subject.set_template_id("Y")
+      expect(subject.sg_request_body).to eq("template_id" => "Y")
+    end
   end
 end

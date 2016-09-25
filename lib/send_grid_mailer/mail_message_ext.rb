@@ -10,12 +10,14 @@ module Mail
     end
 
     def set_template_id(value)
+      return unless value
       sg_mail.template_id = value
     end
 
     def sg_request_body
       set_sender
       set_recipients
+      set_template_id(param_value(:template_id))
       sg_mail.personalizations = personalization if personalization?
       sg_mail.to_json
     end
@@ -32,6 +34,16 @@ module Mail
       bcc.each { |recipient| personalization.bcc = SendGrid::Email.new(email: recipient) } if bcc
     end
 
+    def set_subject(value)
+      return unless value
+      personalization.subject = value
+    end
+
+    def set_content(value, type)
+      return unless value
+      sg_mail.contents = SendGrid::Content.new(type: "text/#{type}", value: value)
+    end
+
     def personalization
       @personalization ||= SendGrid::Personalization.new
     end
@@ -42,6 +54,10 @@ module Mail
 
     def personalization?
       !personalization.to_json.empty?
+    end
+
+    def param_value(key)
+      self[key].try(:value)
     end
   end
 end
