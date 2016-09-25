@@ -1,14 +1,15 @@
 require "rails_helper"
 
 describe Mail::Message do
+  let(:personalization) { subject.send(:personalization) }
+  let(:sg_mail) { subject.send(:sg_mail) }
+
   describe "#template_id" do
-    it "has template_id attr_accessor" do
-      subject.template_id = "X"
-      expect(subject.template_id).to eq("X")
+    it "sets tempalte id in sengrid mail object" do
+      subject.set_template_id("X")
+      expect(sg_mail.template_id).to eq("X")
     end
   end
-
-  let(:personalization) { subject.send(:personalization) }
 
   describe "#substitute" do
     before do
@@ -26,6 +27,31 @@ describe Mail::Message do
     it "adds substitution to collection" do
       subject.substitute("%body%", "blah")
       expect(personalization.substitutions.size).to eq(2)
+    end
+  end
+
+  describe "#sg_request_body" do
+    it "adds sender with valid format" do
+      subject.from = ["sender@platan.us"]
+      expect(subject.sg_request_body).to eq("from" => { "email" => "sender@platan.us" })
+    end
+
+    it "adds recipients with valid format" do
+      subject.to = ["recipient1@platan.us"]
+      subject.cc = "recipient2@platan.us"
+      subject.bcc = ["recipient3@platan.us", "recipient4@platan.us"]
+
+      result = {
+        "personalizations" => [
+          {
+            "to" => [{ "email" => "recipient1@platan.us" }],
+            "cc" => [{ "email" => "recipient2@platan.us" }],
+            "bcc" => [{ "email" => "recipient3@platan.us" }, { "email" => "recipient4@platan.us" }]
+          }
+        ]
+      }
+
+      expect(subject.sg_request_body).to eq(result)
     end
   end
 end
