@@ -1,5 +1,10 @@
 module Mail
   class Message
+    SG_METHODS = [
+      :substitute,
+      :set_template_id
+    ]
+
     def substitute(key, value)
       personalization.substitutions = SendGrid::Substitution.new(key: key, value: value)
     end

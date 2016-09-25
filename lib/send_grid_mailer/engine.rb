@@ -1,5 +1,6 @@
-require_relative "./deliverer"
 require_relative "./mail_message_ext"
+require_relative "./mailer_base_ext"
+require_relative "./deliverer"
 
 module SendGridMailer
   class Engine < ::Rails::Engine
