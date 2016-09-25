@@ -80,5 +80,18 @@ describe Mail::Message do
       expect(subject.sg_request_body).to eq(
         "content" => [{ "type" => "text/html", "value" => "X" }])
     end
+
+    it "adds attachment with valid data" do
+      file = File.read(fixture_file_upload("image.png", "image/png"))
+      subject.attachments.inline["platanus.png"] = file
+      body = subject.sg_request_body
+      expect(body["attachments"].count).to eq(1)
+      attachment = body["attachments"].first
+      expect(Base64.strict_decode64(attachment["content"])).to eq(file)
+      expect(attachment["type"]).to eq("image/png")
+      expect(attachment["filename"]).to eq("platanus.png")
+      expect(attachment["disposition"]).to eq("inline")
+      expect(attachment["content_id"]).not_to be_nil
+    end
   end
 end
