@@ -17,7 +17,10 @@ module Mail
     def sg_request_body
       set_sender
       set_recipients
+      set_subject(param_value(:subject))
       set_template_id(param_value(:template_id))
+      set_content(param_value(:content), "plain")
+      set_content(param_value(:html_content), "html")
       sg_mail.personalizations = personalization if personalization?
       sg_mail.to_json
     end

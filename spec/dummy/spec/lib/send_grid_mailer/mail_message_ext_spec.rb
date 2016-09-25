@@ -63,5 +63,22 @@ describe Mail::Message do
       subject.set_template_id("Y")
       expect(subject.sg_request_body).to eq("template_id" => "Y")
     end
+
+    it "adds subject from hash params" do
+      subject[:subject] = "X"
+      expect(subject.sg_request_body).to eq("personalizations" => [{ "subject" => "X" }])
+    end
+
+    it "adds text content from hash params" do
+      subject[:content] = "X"
+      expect(subject.sg_request_body).to eq(
+        "content" => [{ "type" => "text/plain", "value" => "X" }])
+    end
+
+    it "adds html content from hash params" do
+      subject[:html_content] = "X"
+      expect(subject.sg_request_body).to eq(
+        "content" => [{ "type" => "text/html", "value" => "X" }])
+    end
   end
 end
