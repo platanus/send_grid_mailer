@@ -12,8 +12,9 @@ module SendGridMailer
       :content?
     ]
 
-    def substitute(key, value)
-      personalization.substitutions = SendGrid::Substitution.new(key: key, value: value)
+    def substitute(key, value, default = "")
+      personalization.substitutions = SendGrid::Substitution.new(
+        key: key, value: value.to_s || default)
     end
 
     def set_template_id(value)
