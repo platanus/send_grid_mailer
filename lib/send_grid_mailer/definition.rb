@@ -72,32 +72,6 @@ module SendGridMailer
       mail.to_json
     end
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    def log
-      data = {
-        "From" => mail.from,
-        "To" => personalization.tos,
-        "Cc" => personalization.ccs,
-        "Bcc" => personalization.bccs,
-        "Subject" => personalization.subject,
-        "Template ID" => mail.template_id,
-        "Substitutions" => personalization.substitutions,
-        "Headers" => personalization.headers,
-        "Contents" => mail.contents,
-        "Attachments" => mail.attachments ? mail.attachments.map { |f| f["filename"] } : nil
-      }
-
-      data = data.keys.map do |k|
-        d = data[k].to_s
-        "#{k}: #{d.blank? ? '-' : d}"
-      end.join("\n")
-
-      Rails.logger.info(data)
-    end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
-
-    private
-
     def mail
       @mail ||= SendGrid::Mail.new
     end

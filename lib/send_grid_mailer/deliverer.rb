@@ -3,7 +3,7 @@ module SendGridMailer
     attr_accessor :settings
 
     def initialize(settings)
-      self.settings = settings
+      self.settings = settings.merge(return_response: true)
     end
 
     def api_key
@@ -11,10 +11,10 @@ module SendGridMailer
     end
 
     def deliver!(msg)
-      msg.sg_definition.log
+      logger = SendGridMailer::Logger.new(msg.sg_definition)
+      logger.log_definition
       response = sg_api.client.mail._('send').post(request_body: msg.sg_definition.to_json)
-      Rails.logger.info "Status code: " + response.status_code.to_s
-      response
+      logger.log_result(response)
     end
 
     private
