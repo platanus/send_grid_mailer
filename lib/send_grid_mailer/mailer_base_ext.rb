@@ -26,6 +26,19 @@ module ActionMailer
       set_subject(data[:subject])
       set_body(data[:body], data[:content_type])
       set_template_id(data[:template_id])
+      add_attachments
+    end
+
+    def add_attachments
+      attachments.each do |attachment|
+        add_attachment(
+          attachment.read,
+          attachment.filename,
+          attachment.content_type.to_s.split(";").first,
+          ((attachment.content_disposition =~ /inline/) ? 'inline' : 'attachment'),
+          attachment.content_id
+        )
+      end
     end
   end
 end
