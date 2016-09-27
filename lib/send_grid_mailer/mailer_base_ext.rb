@@ -8,8 +8,20 @@ module ActionMailer
 
     def mail(headers = {}, &_block)
       return super if self.class.delivery_method != :sendgrid
-      define_sg_mail(headers)
       m = @_message
+
+      # Call all the procs (if any)
+      default_values = {}
+      self.class.default.each do |k, v|
+        default_values[k] = v.is_a?(Proc) ? instance_eval(&v) : v
+      end
+
+      # Handle defaults
+      headers = headers.reverse_merge(default_values)
+      headers[:subject] ||= default_i18n_subject
+
+      define_sg_mail(headers)
+
       wrap_delivery_behavior!
       @_mail_was_called = true
       m
