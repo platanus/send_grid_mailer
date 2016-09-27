@@ -69,14 +69,14 @@ describe SendGridMailer::Definition do
     end
   end
 
-  describe "#set_body" do
+  describe "#set_content" do
     it "adds content to mail object" do
-      subject.set_body("X")
+      subject.set_content("X")
       expect(mail.contents).to eq([{ "type" => "text/plain", "value" => "X" }])
     end
 
     it "adds content with different type" do
-      subject.set_body("X", "other/type")
+      subject.set_content("X", "other/type")
       expect(mail.contents).to eq([{ "type" => "other/type", "value" => "X" }])
     end
   end

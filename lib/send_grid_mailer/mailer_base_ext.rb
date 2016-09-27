@@ -2,7 +2,7 @@ module ActionMailer
   class Base < AbstractController::Base
     SendGridMailer::Definition::METHODS.each do |method_name|
       define_method(method_name) do |*args|
-        @_message.sg_definition.send(method_name, *args)
+        sg_definition.send(method_name, *args)
       end
     end
 
@@ -29,16 +29,15 @@ module ActionMailer
 
     private
 
-    def define_sg_mail(data = {})
-      set_sender(data[:from])
-      set_recipients(:to, data[:to])
-      set_recipients(:cc, data[:cc])
-      set_recipients(:bcc, data[:bc])
-      set_subject(data[:subject])
-      set_body(data[:body], data[:content_type])
-      set_template_id(data[:template_id])
+    def define_sg_mail(params = {})
+      set_sender(params[:from])
+      set_recipients(:to, params[:to])
+      set_recipients(:cc, params[:cc])
+      set_recipients(:bcc, params[:bc])
+      set_subject(params[:subject])
+      set_body(params)
       add_attachments
-      add_headers(data.fetch(:headers, {}))
+      add_headers(params.fetch(:headers, {}))
     end
 
     def add_attachments
@@ -56,6 +55,31 @@ module ActionMailer
     def add_headers(heads = {})
       heads.keys.each { |key| add_header(key, heads[key]) }
       @_message.header.fields.each { |field| add_header(field.name, field.value) }
+    end
+
+    def set_body(params)
+      set_template_id(params[:template_id])
+      return if sg_definition.template_id?
+      set_content(params[:body], params[:content_type])
+      return if sg_definition.content?
+      set_body_from_tpl(params)
+    end
+
+    def set_body_from_tpl(params)
+      templates_path = params.delete(:template_path) || self.class.mailer_name
+      templates_name = params.delete(:template_name) || action_name
+
+      paths = Array(templates_path)
+      template = lookup_context.find_all(templates_name, paths).first
+
+      raise ActionView::MissingTemplate.new(
+        paths, templates_name, paths, false, 'mailer') unless template
+
+      set_content(render(template: template), template.type.to_s)
+    end
+
+    def sg_definition
+      @_message.sg_definition
     end
   end
 end

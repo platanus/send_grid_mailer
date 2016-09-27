@@ -6,9 +6,10 @@ module SendGridMailer
       :set_sender,
       :set_recipients,
       :set_subject,
-      :set_body,
+      :set_content,
       :add_attachment,
-      :add_header
+      :add_header,
+      :content?
     ]
 
     def substitute(key, value)
@@ -37,10 +38,18 @@ module SendGridMailer
       personalization.subject = value
     end
 
-    def set_body(value, type = nil)
+    def set_content(value, type = nil)
       return unless value
       type = "text/plain" unless type
       mail.contents = SendGrid::Content.new(type: type, value: value)
+    end
+
+    def content?
+      !mail.contents.blank?
+    end
+
+    def template_id?
+      !mail.template_id.blank?
     end
 
     def add_attachment(file, name, type, disposition = "inline", content_id = nil)
