@@ -34,7 +34,9 @@ module SendGridMailer
       msg = "The E-mail was successfully sent :)\nStatus Code: #{response.status_code}".green
 
       if response.status_code != "202"
-        msg = "The E-mail was not sent :(\nStatus Code: #{response.status_code}".red
+        msg = "The E-mail was not sent :(\nStatus Code: #{response.status_code}\nErrors:"
+        msg += log_errors(response.body)
+        msg = msg.red
       end
 
       Rails.logger.info("\n#{msg}")
@@ -78,6 +80,16 @@ module SendGridMailer
 
     def mail
       definition.mail
+    end
+
+    def log_errors(body)
+      JSON.parse(body)["errors"].map do |error|
+        msg = []
+        msg << "#{error['field']}: " if error['field']
+        msg << error['message']
+        msg << " - help: #{error['help']}" if error['help']
+        "\n\t* #{msg.join('')}"
+      end.join("")
     end
 
     def personalization
