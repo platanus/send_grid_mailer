@@ -1,17 +1,31 @@
 module ActionMailer
   class Base < AbstractController::Base
-    alias_method :old_mail, :mail
-
-    Mail::Message::SG_METHODS.each do |method_name|
+    SendGridMailer::Definition::METHODS.each do |method_name|
       define_method(method_name) do |*args|
-        @_message.send(method_name, *args)
+        @_message.sg_definition.send(method_name, *args)
       end
     end
 
-    def mail(headers = {}, &block)
-      # Adding empty body with sendgrid delivery method to avoid template missing exception.
-      headers[:body] = "" if self.class.delivery_method == :sendgrid
-      old_mail(headers, &block)
+    def mail(headers = {}, &_block)
+      return super if self.class.delivery_method != :sendgrid
+      define_sg_mail(headers)
+      m = @_message
+      wrap_delivery_behavior!
+      headers.each { |k, v| m[k] = v }
+      @_mail_was_called = true
+      m
+    end
+
+    private
+
+    def define_sg_mail(data = {})
+      set_sender(data[:from])
+      set_recipients(:to, data[:to])
+      set_recipients(:cc, data[:cc])
+      set_recipients(:bcc, data[:bc])
+      set_subject(data[:subject])
+      set_body(data[:body], data[:content_type])
+      set_template_id(data[:template_id])
     end
   end
 end

@@ -1,3 +1,4 @@
+require_relative "./definition"
 require_relative "./mail_message_ext"
 require_relative "./mailer_base_ext"
 require_relative "./deliverer"
