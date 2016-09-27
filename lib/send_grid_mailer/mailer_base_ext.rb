@@ -33,7 +33,7 @@ module ActionMailer
       set_sender(params[:from])
       set_recipients(:to, params[:to])
       set_recipients(:cc, params[:cc])
-      set_recipients(:bcc, params[:bc])
+      set_recipients(:bcc, params[:bcc])
       set_subject(params[:subject])
       set_body(params)
       add_attachments
