@@ -3,6 +3,7 @@ module SendGridMailer
     METHODS = [
       :substitute,
       :set_template_id,
+      :set_template_name,
       :set_sender,
       :set_recipients,
       :set_subject,
@@ -12,6 +13,8 @@ module SendGridMailer
       :content?
     ]
 
+    attr_accessor :template_name
+
     def substitute(key, value, default = "")
       personalization.substitutions = SendGrid::Substitution.new(
         key: key, value: value.to_s || default)
@@ -20,6 +23,11 @@ module SendGridMailer
     def set_template_id(value)
       return unless value
       mail.template_id = value
+    end
+
+    def set_template_name(value)
+      return unless value
+      self.template_name = value
     end
 
     def set_sender(email)
@@ -43,14 +51,6 @@ module SendGridMailer
       return unless value
       type = "text/plain" unless type
       mail.contents = SendGrid::Content.new(type: type, value: value)
-    end
-
-    def content?
-      !mail.contents.blank?
-    end
-
-    def template_id?
-      !mail.template_id.blank?
     end
 
     def add_attachment(file, name, type, disposition = "inline", content_id = nil)
@@ -83,6 +83,18 @@ module SendGridMailer
 
     def personalization?
       !personalization.to_json.empty?
+    end
+
+    def content?
+      !mail.contents.blank?
+    end
+
+    def template_id?
+      !mail.template_id.blank?
+    end
+
+    def template_name?
+      !template_name.blank?
     end
   end
 end

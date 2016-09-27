@@ -58,6 +58,7 @@ module ActionMailer
     end
 
     def set_body(params)
+      return if sg_definition.template_name?
       set_template_id(params[:template_id])
       return if sg_definition.template_id?
       set_content(params[:body], params[:content_type])
