@@ -11,7 +11,6 @@ module ActionMailer
       define_sg_mail(headers)
       m = @_message
       wrap_delivery_behavior!
-      headers.each { |k, v| m[k] = v }
       @_mail_was_called = true
       m
     end
@@ -27,6 +26,7 @@ module ActionMailer
       set_body(data[:body], data[:content_type])
       set_template_id(data[:template_id])
       add_attachments
+      add_headers(data.fetch(:headers, {}))
     end
 
     def add_attachments
@@ -39,6 +39,11 @@ module ActionMailer
           attachment.content_id
         )
       end
+    end
+
+    def add_headers(heads = {})
+      heads.keys.each { |key| add_header(key, heads[key]) }
+      @_message.header.fields.each { |field| add_header(field.name, field.value) }
     end
   end
 end

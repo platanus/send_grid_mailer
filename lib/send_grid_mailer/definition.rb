@@ -7,7 +7,8 @@ module SendGridMailer
       :set_recipients,
       :set_subject,
       :set_body,
-      :add_attachment
+      :add_attachment,
+      :add_header
     ]
 
     def substitute(key, value)
@@ -50,6 +51,11 @@ module SendGridMailer
       attachment.disposition = disposition
       attachment.content_id = content_id
       mail.attachments = attachment
+    end
+
+    def add_header(key, value)
+      return if !key || !value
+      personalization.headers = SendGrid::Header.new(key: key, value: value)
     end
 
     def to_json

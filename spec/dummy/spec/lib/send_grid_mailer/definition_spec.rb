@@ -81,6 +81,14 @@ describe SendGridMailer::Definition do
     end
   end
 
+  describe "#add_header" do
+    it "adds headers to personalization object" do
+      subject.add_header("HEADER1", "VALUE1")
+      subject.add_header("HEADER2", "VALUE2")
+      expect(personalization.headers).to eq("HEADER1" => "VALUE1", "HEADER2" => "VALUE2")
+    end
+  end
+
   describe "#add_attachment" do
     it "adds file to mail object" do
       file = File.read(fixture_file_upload("image.png", "image/png"))
