@@ -41,6 +41,6 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :sendgrid
   config.action_mailer.sendgrid_settings = {
-    api_key: "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"
+    api_key: "XXX"
   }
 end
