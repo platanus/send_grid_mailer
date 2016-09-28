@@ -38,4 +38,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  config.action_mailer.delivery_method = :sendgrid
+  config.action_mailer.sendgrid_settings = {
+    api_key: "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"
+  }
 end

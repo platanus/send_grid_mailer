@@ -1,5 +1,7 @@
 module ActionMailer
   class Base < AbstractController::Base
+    alias_method :old_mail, :mail
+
     SendGridMailer::Definition::METHODS.each do |method_name|
       define_method(method_name) do |*args|
         sg_definition.send(method_name, *args)
@@ -7,7 +9,7 @@ module ActionMailer
     end
 
     def mail(headers = {}, &_block)
-      return super if self.class.delivery_method != :sendgrid
+      return old_mail(headers, &_block) if self.class.delivery_method != :sendgrid
       m = @_message
 
       # Call all the procs (if any)
@@ -30,11 +32,11 @@ module ActionMailer
     private
 
     def define_sg_mail(params = {})
-      set_sender(params[:from])
+      set_sender(params[:from]) unless sender?
       set_recipients(:to, params[:to])
       set_recipients(:cc, params[:cc])
       set_recipients(:bcc, params[:bcc])
-      set_subject(params[:subject])
+      set_subject(params[:subject]) unless subject?
       set_body(params)
       add_attachments
       add_headers(params.fetch(:headers, {}))

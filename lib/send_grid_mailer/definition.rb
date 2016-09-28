@@ -10,7 +10,9 @@ module SendGridMailer
       :set_content,
       :add_attachment,
       :add_header,
-      :content?
+      :content?,
+      :sender?,
+      :subject?
     ]
 
     attr_accessor :template_name
@@ -87,6 +89,14 @@ module SendGridMailer
 
     def content?
       !mail.contents.blank?
+    end
+
+    def sender?
+      !mail.from.blank?
+    end
+
+    def subject?
+      !personalization.subject.blank?
     end
 
     def template_id?
