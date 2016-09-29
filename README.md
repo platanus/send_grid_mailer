@@ -96,21 +96,6 @@ class TestMailer < ApplicationMailer
 end
 ```
 
-#### Set E-mail's Subject
-
-```ruby
-class TestMailer < ApplicationMailer
-  def my_email
-    set_subject("My Subject")
-    mail
-  end
-
-  def my_email # through mail method's params
-    mail(subject: "My Subject")
-  end
-end
-```
-
 #### Set E-mail's Headers
 
 ```ruby
