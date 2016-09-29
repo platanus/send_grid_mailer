@@ -23,7 +23,7 @@ module SendGridMailer
 
       data = data.keys.map do |k|
         d = data[k].to_s
-        "#{k.light_blue}: #{(d.blank? ? '-' : d).light_yellow}"
+        "#{k}: #{(d.blank? ? '-' : d)}"
       end.join("\n")
 
       Rails.logger.info("\n#{data}")
@@ -31,12 +31,12 @@ module SendGridMailer
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def log_result(response)
-      msg = "The E-mail was successfully sent :)\nStatus Code: #{response.status_code}".green
+      msg = "The E-mail was successfully sent :)\nStatus Code: #{response.status_code}"
 
       if response.status_code != "202"
         msg = "The E-mail was not sent :(\nStatus Code: #{response.status_code}\nErrors:"
         msg += log_errors(response.body)
-        msg = msg.red
+        msg = msg
       end
 
       Rails.logger.info("\n#{msg}")

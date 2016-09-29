@@ -1,4 +1,3 @@
-require "colorize"
 require "sendgrid-ruby"
 require "send_grid_mailer/engine"
 
