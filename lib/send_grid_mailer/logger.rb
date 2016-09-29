@@ -46,6 +46,7 @@ module SendGridMailer
     private
 
     def log_email(email)
+      return if email.blank?
       email["email"]
     end
 
