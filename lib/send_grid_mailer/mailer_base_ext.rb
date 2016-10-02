@@ -32,11 +32,11 @@ module ActionMailer
     private
 
     def define_sg_mail(params = {})
-      set_sender(params[:from]) unless sender?
+      set_sender(params[:from]) unless sg_definition.sender?
       set_recipients(:to, params[:to])
       set_recipients(:cc, params[:cc])
       set_recipients(:bcc, params[:bcc])
-      set_subject(params[:subject]) unless subject?
+      set_subject(params[:subject]) unless sg_definition.subject?
       set_body(params)
       add_attachments
       add_headers(params.fetch(:headers, {}))

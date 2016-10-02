@@ -9,13 +9,10 @@ module SendGridMailer
       :set_subject,
       :set_content,
       :add_attachment,
-      :add_header,
-      :content?,
-      :sender?,
-      :subject?
+      :add_header
     ]
 
-    attr_accessor :template_name
+    attr_reader :template_name
 
     def substitute(key, value, default = "")
       personalization.substitutions = SendGrid::Substitution.new(
@@ -29,7 +26,7 @@ module SendGridMailer
 
     def set_template_name(value)
       return unless value
-      self.template_name = value
+      @template_name = value
     end
 
     def set_sender(email)
@@ -83,28 +80,16 @@ module SendGridMailer
       @personalization ||= SendGrid::Personalization.new
     end
 
-    def personalization?
-      !personalization.to_json.empty?
-    end
+    def personalization?; !personalization.to_json.empty? end
 
-    def content?
-      !mail.contents.blank?
-    end
+    def content?; !mail.contents.blank? end
 
-    def sender?
-      !mail.from.blank?
-    end
+    def sender?; !mail.from.blank? end
 
-    def subject?
-      !personalization.subject.blank?
-    end
+    def subject?; !personalization.subject.blank? end
 
-    def template_id?
-      !mail.template_id.blank?
-    end
+    def template_id?; !mail.template_id.blank? end
 
-    def template_name?
-      !template_name.blank?
-    end
+    def template_name?; !template_name.blank? end
   end
 end
