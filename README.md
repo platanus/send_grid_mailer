@@ -1,4 +1,7 @@
 # SendGrid Mailer
+[![Gem Version](https://badge.fury.io/rb/send_grid_mailer.svg)](https://badge.fury.io/rb/send_grid_mailer)
+[![Build Status](https://travis-ci.org/platanus/send_grid_mailer.svg?branch=master)](https://travis-ci.org/platanus/send_grid_mailer)
+[![Coverage Status](https://coveralls.io/repos/github/platanus/send_grid_mailer/badge.svg)](https://coveralls.io/github/platanus/send_grid_mailer)
 
 Is an Action Mailer adapter for using SendGrid in a Rails application and
 It's built on top of the [sengrid-ruby](https://github.com/sendgrid/sendgrid-ruby) gem.

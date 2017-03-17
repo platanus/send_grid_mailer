@@ -27,4 +27,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails", "~> 3.4.0"
   s.add_development_dependency "guard-rspec", "~> 4.7"
   s.add_development_dependency "factory_girl_rails", "~> 4.6.0"
+  s.add_development_dependency "coveralls"
 end

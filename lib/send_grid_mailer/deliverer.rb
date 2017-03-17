@@ -16,6 +16,7 @@ module SendGridMailer
       logger.log_definition
       response = sg_api.client.mail._('send').post(request_body: msg.sg_definition.to_json)
       logger.log_result(response)
+      response
     end
 
     private
