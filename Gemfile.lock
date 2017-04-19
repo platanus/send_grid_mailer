@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    send_grid_mailer (0.3.0)
+    send_grid_mailer (0.4.0)
       rails (>= 4.2.0)
       sendgrid-ruby (~> 4.0, >= 4.0.4)
 
