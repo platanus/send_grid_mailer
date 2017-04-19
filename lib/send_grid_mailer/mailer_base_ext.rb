@@ -48,7 +48,7 @@ module ActionMailer
           attachment.read,
           attachment.filename,
           attachment.content_type.to_s.split(";").first,
-          ((attachment.content_disposition =~ /inline/) ? 'inline' : 'attachment'),
+          attachment.content_disposition =~ /inline/ ? 'inline' : 'attachment',
           attachment.content_id
         )
       end
@@ -75,8 +75,9 @@ module ActionMailer
       paths = Array(templates_path)
       template = lookup_context.find_all(templates_name, paths).first
 
-      raise ActionView::MissingTemplate.new(
-        paths, templates_name, paths, false, 'mailer') unless template
+      if !template
+        raise ActionView::MissingTemplate.new(paths, templates_name, paths, false, 'mailer')
+      end
 
       set_content(render(template: template), template.type.to_s)
     end

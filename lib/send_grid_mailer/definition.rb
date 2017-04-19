@@ -16,7 +16,8 @@ module SendGridMailer
 
     def substitute(key, value, default = "")
       personalization.substitutions = SendGrid::Substitution.new(
-        key: key, value: value.to_s || default)
+        key: key, value: value.to_s || default
+      )
     end
 
     def set_template_id(value)

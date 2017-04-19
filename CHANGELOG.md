@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Unreleased
+
+##### Changed
+
+* Change Rails version to be "optimistic" in order to use the gem with Rails 5 too.
+
 ### v0.3.0
 
 ##### Added
