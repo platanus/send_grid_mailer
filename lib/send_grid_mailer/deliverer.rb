@@ -26,8 +26,8 @@ module SendGridMailer
       response = sg_api.client.templates.get
 
       if response.status_code != "200"
-        raise(SendGridMailer::Exception.new(
-                "Error trying to get templates. Status Code: #{response.status_code}"))
+        m = "Error trying to get templates. Status Code: #{response.status_code}"
+        raise SendGridMailer::Exception.new(m)
       end
 
       JSON.parse(response.body)["templates"].each do |tpl|
@@ -35,8 +35,8 @@ module SendGridMailer
       end
 
       if !definition.template_id?
-        raise(SendGridMailer::Exception.new(
-                "No template with name #{definition.template_name}"))
+        m = "No template with name #{definition.template_name}"
+        raise SendGridMailer::Exception.new(m)
       end
     end
 
