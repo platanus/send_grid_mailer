@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     send_grid_mailer (0.3.0)
-      rails (~> 4.2, >= 4.2.0)
+      rails (>= 4.2.0)
       sendgrid-ruby (~> 4.0, >= 4.0.4)
 
 GEM
@@ -63,8 +63,8 @@ GEM
       railties (>= 3.0.0)
     ffi (1.9.14)
     formatador (0.2.5)
-    globalid (0.3.7)
-      activesupport (>= 4.1.0)
+    globalid (0.4.0)
+      activesupport (>= 4.2.0)
     guard (2.14.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -163,8 +163,8 @@ GEM
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
     ruby_dep (1.4.0)
-    ruby_http_client (3.0.1)
-    sendgrid-ruby (4.0.7)
+    ruby_http_client (3.0.2)
+    sendgrid-ruby (4.0.8)
       ruby_http_client (~> 3.0.1)
     shellany (0.0.1)
     simplecov (0.12.0)
