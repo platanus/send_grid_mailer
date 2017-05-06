@@ -37,6 +37,13 @@ describe SendGridMailer::Definition do
     end
   end
 
+  describe "#set_sender" do
+    it "adds sender with format to mail object" do
+      subject.set_sender("Sender Name <sender@platan.us>")
+      expect(mail.from).to eq("email" => "sender@platan.us", "name" => "Sender Name")
+    end
+  end
+
   describe "#set_recipients" do
     let(:m1) { "leandro@platan.us" }
     let(:m2) { "ldlsegovia@gmail.com" }

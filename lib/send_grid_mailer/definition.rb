@@ -32,7 +32,14 @@ module SendGridMailer
 
     def set_sender(email)
       return unless email
-      mail.from = SendGrid::Email.new(email: email)
+      matched_format = email.match(/<(.+)>/)
+      if matched_format
+        address = matched_format[1]
+        name = email.match(/\"?([^<^\"]*)\"?\s?/)[1].strip
+        mail.from = SendGrid::Email.new(email: address, name: name)
+      else
+        mail.from = SendGrid::Email.new(email: email)
+      end
     end
 
     def set_recipients(mode, *emails)
