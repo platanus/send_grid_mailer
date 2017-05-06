@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### v0.5.0
+
+##### Changed
+
+* Support sender with standard email string "email> name", #3, thanks @agustinf
+
 ### v0.4.0
 
 ##### Changed
