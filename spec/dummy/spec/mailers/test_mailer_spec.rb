@@ -377,47 +377,4 @@ describe TestMailer do
       expect_valid_mail_sent(request_body)
     end
   end
-
-  def get_templates(status_code, response = nil)
-    result = double(status_code: status_code, body: response)
-    client = double(get: result)
-    expect_any_instance_of(SendGrid::Client).to receive(:_).with(:templates).and_return(client)
-  end
-
-  context "setting template name" do
-    let(:deliver) { described_class.template_name_email.deliver_now! }
-
-    it "sends mail with valid template id" do
-      response = { templates: [{ id: "123", name: "my template name" }] }.to_json
-      get_templates("200", response)
-
-      request_body = {
-        "from" =>
-          {
-            "email" => "default-sender@platan.us"
-          },
-        "personalizations" => [
-          {
-            "subject" => "Template name email"
-          }
-        ],
-        "template_id" => "123"
-      }
-
-      expect_valid_mail_sent(request_body)
-    end
-
-    it "raises error when templates endpoint is down" do
-      get_templates("500")
-      expect { deliver }.to raise_error(SendGridMailer::Exception,
-        "Error trying to get templates. Status Code: 500")
-    end
-
-    it "raises error when template name does not match with server response" do
-      response = { templates: [{ id: "123", name: "other template" }] }.to_json
-      get_templates("200", response)
-      expect { deliver }.to raise_error(SendGridMailer::Exception,
-        "No template with name my template name")
-    end
-  end
 end

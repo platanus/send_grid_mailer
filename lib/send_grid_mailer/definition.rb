@@ -3,7 +3,6 @@ module SendGridMailer
     METHODS = [
       :substitute,
       :set_template_id,
-      :set_template_name,
       :set_sender,
       :set_recipients,
       :set_subject,
@@ -11,8 +10,6 @@ module SendGridMailer
       :add_attachment,
       :add_header
     ]
-
-    attr_reader :template_name
 
     def substitute(key, value, default = "")
       personalization.substitutions = SendGrid::Substitution.new(
@@ -23,11 +20,6 @@ module SendGridMailer
     def set_template_id(value)
       return unless value
       mail.template_id = value
-    end
-
-    def set_template_name(value)
-      return unless value
-      @template_name = value
     end
 
     def set_sender(email)
@@ -97,7 +89,5 @@ module SendGridMailer
     def subject?; !personalization.subject.blank? end
 
     def template_id?; !mail.template_id.blank? end
-
-    def template_name?; !template_name.blank? end
   end
 end

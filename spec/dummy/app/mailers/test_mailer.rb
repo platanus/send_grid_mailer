@@ -44,11 +44,6 @@ class TestMailer < ApplicationMailer
     mail
   end
 
-  def template_name_email
-    set_template_name("my template name")
-    mail(body: "X")
-  end
-
   def template_id_params_email
     mail(template_id: "XXX")
   end

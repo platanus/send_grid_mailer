@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Unreleased
+
+##### Changed
+
+* Remove ability to set templates by name
+
 ### v0.5.0
 
 ##### Changed
