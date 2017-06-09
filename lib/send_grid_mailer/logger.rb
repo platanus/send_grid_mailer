@@ -17,23 +17,25 @@ module SendGridMailer
         "Attachments" => log_attachments(mail)
       }
 
-      Rails.logger.info("\n#{build_definition_message(data)}")
+      log(build_definition_message(data))
     end
 
-    def log_sg_api_response(response)
-      msg = "The E-mail was successfully sent :)\nStatus Code: #{response.status_code}"
+    def log_api_success_response(response)
+      log("The E-mail was successfully sent :)\nStatus Code: #{response.status_code}")
+    end
 
-      if response.status_code != "202"
-        msg = "The E-mail was not sent :(\nStatus Code: #{response.status_code}\nErrors:"
-        msg += log_errors(response.body)
-        msg = msg
-      end
-
-      Rails.logger.info("\n#{msg}")
-      nil
+    def log_api_error_response(status_code, errors)
+      msg = "The E-mail was not sent :(\nStatus Code: #{status_code}\nErrors:"
+      msg += log_errors(errors)
+      log(msg)
     end
 
     private
+
+    def log(msg)
+      Rails.logger.info("\n#{msg}")
+      nil
+    end
 
     def build_definition_message(data)
       data = data.keys.map do |k|
@@ -76,8 +78,8 @@ module SendGridMailer
       end.join("")
     end
 
-    def log_errors(body)
-      JSON.parse(body)["errors"].map do |error|
+    def log_errors(errors)
+      errors.map do |error|
         msg = []
         msg << "#{error['field']}: " if error['field']
         msg << error['message']
