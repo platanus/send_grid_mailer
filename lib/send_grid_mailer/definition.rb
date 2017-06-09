@@ -76,6 +76,10 @@ module SendGridMailer
       @mail ||= SendGrid::Mail.new
     end
 
+    def clean_recipients(mode)
+      personalization.instance_variable_set("@#{mode}s", nil)
+    end
+
     def personalization
       @personalization ||= SendGrid::Personalization.new
     end

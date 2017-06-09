@@ -9,8 +9,7 @@ module ActionMailer
     end
 
     def mail(headers = {}, &_block)
-      return old_mail(headers, &_block) if self.class.delivery_method != :sendgrid
-      m = @_message
+      return old_mail(headers, &_block) unless enabled_sendgrid?
 
       # Call all the procs (if any)
       default_values = {}
@@ -24,9 +23,7 @@ module ActionMailer
 
       define_sg_mail(headers)
 
-      wrap_delivery_behavior!
-      @_mail_was_called = true
-      m
+      SendGridMailer::Deliverer.new.deliver!(sg_definition)
     end
 
     private
@@ -82,7 +79,11 @@ module ActionMailer
     end
 
     def sg_definition
-      @_message.sg_definition
+      @sg_definition ||= SendGridMailer::Definition.new
+    end
+
+    def enabled_sendgrid?
+      self.class.delivery_method == :sendgrid
     end
   end
 end

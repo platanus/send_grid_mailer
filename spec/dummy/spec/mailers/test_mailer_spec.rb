@@ -3,7 +3,7 @@ require "rails_helper"
 describe TestMailer do
   before do
     allow(TestMailer).to receive(:delivery_method).and_return(:sendgrid)
-    allow_any_instance_of(SendGridMailer::Deliverer).to receive(:api_key).and_return("XXX")
+    allow_any_instance_of(SendGridMailer::Deliverer).to receive(:get_api_key).and_return("XXX")
   end
 
   def expect_valid_mail_sent(request_body)
@@ -374,6 +374,53 @@ describe TestMailer do
         ]
       }
 
+      expect_valid_mail_sent(request_body)
+    end
+  end
+
+  context "working with recipient interceptor" do
+    let(:interceptor) { double(:interceptor, class: "RecipientInterceptor") }
+    let(:deliver) { described_class.recipients_email.deliver_now! }
+    let(:request_body) do
+      {
+        "from" =>
+          {
+            "email" => "default-sender@platan.us"
+          },
+        "personalizations" => [
+          {
+            "to" => [
+              { "email" => "interceptor1@platan.us" },
+              { "email" => "interceptor2@platan.us" }
+            ],
+            "subject" => "[STAGING] Recipients email",
+            "headers" =>
+              {
+                "X-Intercepted-To" => "r1@platan.us, r2@platan.us",
+                "X-Intercepted-Cc" => "r4@platan.us",
+                "X-Intercepted-Bcc" => "r5@platan.us"
+              }
+          }
+        ],
+        "content" => [
+          {
+            "type" => "text/plain",
+            "value" => "X"
+          }
+        ]
+      }
+    end
+
+    before do
+      allow(interceptor).to receive(:instance_variable_get)
+        .with(:@recipients).and_return(["interceptor1@platan.us", "interceptor2@platan.us"])
+      allow(interceptor).to receive(:instance_variable_get)
+        .with(:@subject_prefix).and_return("[STAGING]")
+      allow(Mail).to receive(:class_variable_get)
+        .with(:@@delivery_interceptors).and_return([interceptor])
+    end
+
+    it "sends mail with valid recipients" do
       expect_valid_mail_sent(request_body)
     end
   end
