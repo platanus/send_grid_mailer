@@ -1,15 +1,12 @@
 module SendGridMailer
   class Deliverer
     include InterceptorsHandler
+    include Logger
 
     def deliver!(sg_definition)
       execute_interceptors(sg_definition)
-      logger = SendGridMailer::Logger.new(sg_definition)
-      logger.log_definition
-      response = sg_api.send_mail(sg_definition)
-      logger.log_result(response)
-      response
-      nil
+      log_definition(sg_definition)
+      sg_api.send_mail(sg_definition)
     end
 
     private

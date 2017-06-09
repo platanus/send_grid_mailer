@@ -1,36 +1,26 @@
 module SendGridMailer
-  class Logger
-    attr_reader :definition
+  module Logger
+    def log_definition(definition)
+      mail = definition.mail
+      personalization = definition.personalization
 
-    def initialize(definition)
-      @definition = definition
-    end
-
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    def log_definition
       data = {
         "Subject" => personalization.subject,
         "Template ID" => mail.template_id,
         "From" => log_email(mail.from),
-        "To" => log_emails(:tos),
-        "Cc" => log_emails(:ccs),
-        "Bcc" => log_emails(:bccs),
+        "To" => log_emails(personalization, :tos),
+        "Cc" => log_emails(personalization, :ccs),
+        "Bcc" => log_emails(personalization, :bccs),
         "Substitutions" => log_pairs(personalization.substitutions),
         "Headers" => log_pairs(personalization.headers),
-        "body" => log_contents,
-        "Attachments" => log_attachments
+        "body" => log_contents(mail),
+        "Attachments" => log_attachments(mail)
       }
 
-      data = data.keys.map do |k|
-        d = data[k].to_s
-        "#{k}: #{(d.blank? ? '-' : d)}"
-      end.join("\n")
-
-      Rails.logger.info("\n#{data}")
+      Rails.logger.info("\n#{build_definition_message(data)}")
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-    def log_result(response)
+    def log_sg_api_response(response)
       msg = "The E-mail was successfully sent :)\nStatus Code: #{response.status_code}"
 
       if response.status_code != "202"
@@ -45,12 +35,19 @@ module SendGridMailer
 
     private
 
+    def build_definition_message(data)
+      data = data.keys.map do |k|
+        d = data[k].to_s
+        "#{k}: #{(d.blank? ? '-' : d)}"
+      end.join("\n")
+    end
+
     def log_email(email)
       return if email.blank?
       email["email"]
     end
 
-    def log_emails(origin)
+    def log_emails(personalization, origin)
       emails = personalization.send(origin)
       return if emails.blank?
       emails.map do |email|
@@ -58,14 +55,14 @@ module SendGridMailer
       end.join(", ")
     end
 
-    def log_attachments
+    def log_attachments(mail)
       return if mail.attachments.blank?
       mail.attachments.map do |f|
         "\n\t#{f['filename']}"
       end.join("")
     end
 
-    def log_contents
+    def log_contents(mail)
       return if mail.contents.blank?
       mail.contents.map do |content|
         "\n\ttype: #{content['type']}\n\tvalue: #{content['value']}"
@@ -79,10 +76,6 @@ module SendGridMailer
       end.join("")
     end
 
-    def mail
-      definition.mail
-    end
-
     def log_errors(body)
       JSON.parse(body)["errors"].map do |error|
         msg = []
@@ -91,10 +84,6 @@ module SendGridMailer
         msg << " - help: #{error['help']}" if error['help']
         "\n\t* #{msg.join('')}"
       end.join("")
-    end
-
-    def personalization
-      definition.personalization
     end
   end
 end
