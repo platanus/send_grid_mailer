@@ -141,11 +141,6 @@ class TestMailer < ApplicationMailer
     mail
   end
 
-  def my_email # through template's name
-    set_template_name("my template name")
-    mail
-  end
-
   def my_email # through mail method's params
     mail(template_id: "XXX")
   end

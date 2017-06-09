@@ -11,33 +11,17 @@ module SendGridMailer
     end
 
     def deliver!(msg)
-      set_template_id_from_name(msg.sg_definition)
       logger = SendGridMailer::Logger.new(msg.sg_definition)
       logger.log_definition
-      response = sg_api.client.mail._('send').post(request_body: msg.sg_definition.to_json)
+      response = send_mail(msg.sg_definition.to_json)
       logger.log_result(response)
       response
     end
 
     private
 
-    def set_template_id_from_name(definition)
-      return unless definition.template_name
-      response = sg_api.client.templates.get
-
-      if response.status_code != "200"
-        m = "Error trying to get templates. Status Code: #{response.status_code}"
-        raise SendGridMailer::Exception.new(m)
-      end
-
-      JSON.parse(response.body)["templates"].each do |tpl|
-        definition.set_template_id(tpl["id"]) if tpl["name"] == definition.template_name
-      end
-
-      if !definition.template_id?
-        m = "No template with name #{definition.template_name}"
-        raise SendGridMailer::Exception.new(m)
-      end
+    def send_mail(sg_mail)
+      sg_api.client.mail._('send').post(request_body: sg_mail)
     end
 
     def sg_api
