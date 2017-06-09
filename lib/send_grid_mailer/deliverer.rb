@@ -1,7 +1,9 @@
 module SendGridMailer
   class Deliverer
+    include InterceptorsHandler
 
     def deliver!(sg_definition)
+      execute_interceptors(sg_definition)
       logger = SendGridMailer::Logger.new(sg_definition)
       logger.log_definition
       response = send_mail(sg_definition.to_json)

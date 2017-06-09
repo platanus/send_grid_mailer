@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Unreleased
 
+##### Added
+
+* Implement "a version" of Recipients Interceptor https://github.com/croaky/recipient_interceptor compatible with SendGrid.
+
 ##### Changed
 
 * Remove ability to set templates by name

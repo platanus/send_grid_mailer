@@ -159,7 +159,31 @@ class TestMailer < ApplicationMailer
 end
 ```
 
-> Remember: you need to specify al least: `body`, `template`, `template name` or a Rails template.
+> Remember: you need to specify al least: `body`, `template_id` or a Rails template.
+
+## Recipient Interceptor
+
+This gem is compatible with [Recipient Interceptor gem](https://github.com/croaky/recipient_interceptor/tree/v0.1.2).
+However, this gem only uses its configuration. Internally, we modify the behaviour to play nice with [sengrid-ruby](https://github.com/sendgrid/sendgrid-ruby) gem.
+So, the current code is based on [Recipient Interceptor v0.1.2](https://github.com/croaky/recipient_interceptor/tree/v0.1.2). New versions may not work.
+
+To make it work...
+
+Add to your Gemfile:
+
+```ruby
+gem "send_grid_mailer"
+gem "recipient_interceptor"
+```
+
+In, for example, your `/my-project/config/environments/development.rb` file:
+
+```ruby
+Mail.register_interceptor RecipientInterceptor.new(
+  ENV["EMAIL_RECIPIENTS"],
+  subject_prefix: '[STAGING]'
+)
+```
 
 ## Testing
 
