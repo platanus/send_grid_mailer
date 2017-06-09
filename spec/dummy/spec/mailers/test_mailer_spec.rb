@@ -3,7 +3,7 @@ require "rails_helper"
 describe TestMailer do
   before do
     allow(TestMailer).to receive(:delivery_method).and_return(:sendgrid)
-    allow_any_instance_of(SendGridMailer::Deliverer).to receive(:get_api_key).and_return("XXX")
+    allow_any_instance_of(SendGridMailer::Deliverer).to receive(:api_key).and_return("XXX")
   end
 
   def expect_valid_mail_sent(request_body)
