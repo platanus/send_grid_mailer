@@ -11,7 +11,6 @@ module SendGridMailer
       require_relative "./errors"
       require_relative "./logger"
       require_relative "./definition"
-      require_relative "./mail_message_ext"
       require_relative "./mailer_base_ext"
     end
 

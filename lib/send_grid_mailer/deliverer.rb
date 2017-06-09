@@ -1,21 +1,13 @@
 module SendGridMailer
   class Deliverer
-    attr_accessor :settings
 
-    def initialize(settings)
-      self.settings = settings.merge(return_response: true)
-    end
-
-    def api_key
-      settings[:api_key] || raise(SendGridMailer::Exception.new("Missing sendgrid API key"))
-    end
-
-    def deliver!(msg)
-      logger = SendGridMailer::Logger.new(msg.sg_definition)
+    def deliver!(sg_definition)
+      logger = SendGridMailer::Logger.new(sg_definition)
       logger.log_definition
-      response = send_mail(msg.sg_definition.to_json)
+      response = send_mail(sg_definition.to_json)
       logger.log_result(response)
       response
+      nil
     end
 
     private
@@ -25,7 +17,17 @@ module SendGridMailer
     end
 
     def sg_api
-      @sg_api ||= SendGrid::API.new(api_key: api_key)
+      @sg_api ||= SendGrid::API.new(api_key: sg_api_key)
+    end
+
+    def sg_api_key
+      get_api_key || raise(SendGridMailer::Exception.new("Missing sendgrid API key"))
+    end
+
+    def get_api_key
+      Rails.application.config.action_mailer.sendgrid_settings[:api_key]
+    rescue
+      nil
     end
   end
 end
