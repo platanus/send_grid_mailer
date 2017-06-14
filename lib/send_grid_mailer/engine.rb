@@ -9,9 +9,10 @@ module SendGridMailer
 
     initializer "initialize" do
       require_relative "./errors"
+      require_relative "./logger"
+      require_relative "./api"
       require_relative "./interceptors_handler"
       require_relative "./interceptor/recipient_interceptor"
-      require_relative "./logger"
       require_relative "./definition"
       require_relative "./mailer_base_ext"
     end
