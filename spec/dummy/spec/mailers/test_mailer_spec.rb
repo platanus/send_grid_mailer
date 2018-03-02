@@ -10,7 +10,9 @@ describe TestMailer do
     error_code = "404"
     result = { errors: errors }.to_json
     expect_sg_api_request(error_code, request_body, result)
-    expect { deliver }.to raise_error(SendGridMailer::ApiError, "sendgrid api error") do |e|
+    error_messages = errors.map { |err| err['message'] }.join('. ')
+    message = "Sendgrid API error. Code: #{error_code}. Errors: #{error_messages}"
+    expect { deliver }.to raise_error(SendGridMailer::ApiError, message) do |e|
       expect(e.error_code).to eq(error_code)
       expect(e.errors).to eq(errors)
     end

@@ -4,7 +4,7 @@ module SendGridMailer
 
   class InvalidApiKey < Error
     def initialize
-      super("the SendGrid API key is invalid or missing")
+      super("The SendGrid API key is invalid or missing")
     end
   end
 
@@ -14,7 +14,8 @@ module SendGridMailer
     def initialize(error_code, errors)
       @error_code = error_code
       @errors = errors
-      super("sendgrid api error")
+      error_message = errors.map { |err| err['message'] }.join('. ')
+      super("Sendgrid API error. Code: #{error_code}. Errors: #{error_message}")
     end
   end
 end
