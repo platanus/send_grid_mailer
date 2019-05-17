@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "sendgrid-ruby", "~> 4.0", ">= 4.0.4"
   s.add_development_dependency "pry"
   s.add_development_dependency "pry-rails"
-  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "sqlite3", "~> 1.3.13"
   s.add_development_dependency "rspec-rails", "~> 3.4.0"
   s.add_development_dependency "guard-rspec", "~> 4.7"
   s.add_development_dependency "factory_bot_rails"
