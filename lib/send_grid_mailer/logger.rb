@@ -30,8 +30,10 @@ module SendGridMailer
       log(msg)
     end
 
-    def log_template(template)
-      log(template)
+    def log_template(template, substitutions)
+      template_copy = template.dup
+      substitutions.each { |k, v| template_copy.gsub!(k, v) }
+      log(template_copy)
     end
 
     private

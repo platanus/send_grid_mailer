@@ -10,7 +10,7 @@ module SendGridMailer
         version["active"] == 1
       end
       template_content = template_active_version["html_content"]
-      log_template(template_content)
+      log_template(template_content, sg_definition.personalization.substitutions)
     end
 
     private
