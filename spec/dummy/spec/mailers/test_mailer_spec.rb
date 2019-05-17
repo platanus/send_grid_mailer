@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe TestMailer do
   def expect_valid_sg_api_request(request_body)
-    expect_sg_api_request(SendGridMailer::Api::SUCCESS_CODE, request_body)
+    expect_sg_api_request(SendGridMailer::Api::SUCCESS_CODES[:mail], request_body)
     deliver
   end
 

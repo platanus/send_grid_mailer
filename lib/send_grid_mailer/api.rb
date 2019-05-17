@@ -2,7 +2,7 @@ module SendGridMailer
   class Api
     include Logger
 
-    SUCCESS_CODE = 202
+    SUCCESS_CODES = { mail: 202, template: 200 }
 
     def initialize(api_key)
       @api_key = api_key || raise(SendGridMailer::InvalidApiKey)
@@ -10,19 +10,24 @@ module SendGridMailer
 
     def send_mail(sg_definition)
       response = sg_api.client.mail._('send').post(request_body: sg_definition.to_json)
-      handle_response(response)
+      handle_response(response, :mail)
+    end
+
+    def get_template(sg_definition)
+      response = sg_api.client.templates._(sg_definition.mail.template_id).get()
+      handle_response(response, :template)
     end
 
     private
 
-    def handle_response(response)
-      if response.status_code.to_i != SUCCESS_CODE
+    def handle_response(response, api_call_type)
+      if response.status_code.to_i != SUCCESS_CODES[api_call_type]
         errors = response_errors(response)
-        log_api_error_response(response.status_code, errors)
+        log_api_error_response(response.status_code, errors, api_call_type)
         raise SendGridMailer::ApiError.new(response.status_code, errors)
       end
 
-      log_api_success_response(response)
+      log_api_success_response(response, api_call_type)
       response
     end
 
