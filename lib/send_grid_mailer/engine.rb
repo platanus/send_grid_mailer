@@ -17,9 +17,11 @@ module SendGridMailer
       require_relative "./mailer_base_ext"
     end
 
-    initializer "add_sendgrid_deliverer", before: "action_mailer.set_configs" do
+    initializer "add_sendgrid_deliverers", before: "action_mailer.set_configs" do
+      require_relative "./dev_deliverer"
       require_relative "./deliverer"
       ActionMailer::Base.add_delivery_method(:sendgrid, SendGridMailer::Deliverer)
+      ActionMailer::Base.add_delivery_method(:sendgrid_dev, SendGridMailer::DevDeliverer)
     end
   end
 end

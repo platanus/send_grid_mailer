@@ -30,6 +30,10 @@ module SendGridMailer
       log(msg)
     end
 
+    def log_template(template)
+      log(template)
+    end
+
     private
 
     def success_message(response, api_call_type)
