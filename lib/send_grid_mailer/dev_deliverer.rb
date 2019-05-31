@@ -9,6 +9,11 @@ module SendGridMailer
       log_definition(sg_definition)
       mail = Mail.new do |m|
         m.html_part = parsed_template(sg_definition).html_safe
+        m.subject = sg_definition.personalization.subject
+        m.from = sg_definition.mail.from["email"] if sg_definition.mail.from.present?
+        m.to = emails(sg_definition, :tos) if emails(sg_definition, :tos).present?
+        m.cc = emails(sg_definition, :ccs) if emails(sg_definition, :ccs).present?
+        m.bcc = emails(sg_definition, :bccs) if emails(sg_definition, :bccs).present?
       end
       letter_opener_delivery_method.deliver!(mail)
     end
@@ -37,6 +42,13 @@ module SendGridMailer
       template_content = template_active_version["html_content"]
       sg_definition.personalization.substitutions.each { |k, v| template_content.gsub!(k, v) }
       template_content
+    end
+
+    def emails(sg_definition, origin)
+      @emails ||= {}
+      return @emails[origin] if @emails.has_key?(origin)
+
+      @emails[origin] = sg_definition.personalization.send(origin)&.map {|em| em["email"]}
     end
   end
 end
