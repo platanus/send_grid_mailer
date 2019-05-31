@@ -6,6 +6,7 @@ module SendGridMailer
 
     def deliver!(sg_definition)
       execute_interceptors(sg_definition)
+      log_definition(sg_definition)
       mail = Mail.new do |m|
         m.html_part = parsed_template(sg_definition).html_safe
       end
