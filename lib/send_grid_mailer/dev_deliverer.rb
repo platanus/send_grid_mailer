@@ -7,15 +7,7 @@ module SendGridMailer
     def deliver!(sg_definition)
       execute_interceptors(sg_definition)
       log_definition(sg_definition)
-      mail = Mail.new do |m|
-        m.html_part = parsed_template(sg_definition).html_safe
-        m.subject = sg_definition.personalization.subject
-        m.from = sg_definition.mail.from["email"] if sg_definition.mail.from.present?
-        m.to = emails(sg_definition, :tos) if emails(sg_definition, :tos).present?
-        m.cc = emails(sg_definition, :ccs) if emails(sg_definition, :ccs).present?
-        m.bcc = emails(sg_definition, :bccs) if emails(sg_definition, :bccs).present?
-      end
-      letter_opener_delivery_method.deliver!(mail)
+      letter_opener_delivery_method.deliver!(mail(sg_definition))
     end
 
     private
@@ -49,6 +41,17 @@ module SendGridMailer
       return @emails[origin] if @emails.has_key?(origin)
 
       @emails[origin] = sg_definition.personalization.send(origin)&.map {|em| em["email"]}
+    end
+
+    def mail(sg_definition)
+      Mail.new do |m|
+        m.html_part = parsed_template(sg_definition).html_safe
+        m.subject = sg_definition.personalization.subject
+        m.from = sg_definition.mail.from["email"] if sg_definition.mail.from.present?
+        m.to = emails(sg_definition, :tos) if emails(sg_definition, :tos).present?
+        m.cc = emails(sg_definition, :ccs) if emails(sg_definition, :ccs).present?
+        m.bcc = emails(sg_definition, :bccs) if emails(sg_definition, :bccs).present?
+      end
     end
   end
 end
