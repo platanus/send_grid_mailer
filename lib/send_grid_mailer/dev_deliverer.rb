@@ -45,14 +45,16 @@ module SendGridMailer
     end
 
     def mail
-      Mail.new do |m|
-        m.html_part = parsed_template.html_safe
-        m.subject = @sg_definition.personalization.subject
-        m.from = @sg_definition.mail.from["email"] if @sg_definition.mail.from.present?
-        m.to = emails(:tos) if emails(:tos).present?
-        m.cc = emails(:ccs) if emails(:ccs).present?
-        m.bcc = emails(:bccs) if emails(:bccs).present?
-      end
+      template = parsed_template.html_safe
+      m = Mail.new
+      m.html_part = template
+      m.subject = @sg_definition.personalization.subject
+      m.from = @sg_definition.mail.from["email"] if @sg_definition.mail.from.present?
+      m.to = emails(:tos) if emails(:tos).present?
+      m.cc = emails(:ccs) if emails(:ccs).present?
+      m.bcc = emails(:bccs) if emails(:bccs).present?
+
+      m
     end
   end
 end
