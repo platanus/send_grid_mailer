@@ -543,16 +543,12 @@ describe TestMailer do
       end
 
       context "with succesful response" do
-        let(:active_template) {
-          "<h1>Active version</h1>"\
-          "<span>This should be replaced: %key%</span>"\
-          "<span>This should not be replaced: %key2%</span>"
-        }
-        let(:active_template_with_substitutions) {
+        def active_template(sub = "%key%")
           "<h1>Active version</h1>"\
           "<span>This should be replaced: #{sub}</span>"\
           "<span>This should not be replaced: %key2%</span>"
-        }
+        end
+
         let(:response) { {
           versions: [
             {
@@ -572,10 +568,10 @@ describe TestMailer do
         end
 
         it "gets templates form sendgrid api, applies substitutions to active one and "\
-           "uses LetterOpener to open deliver it" do
+           "uses LetterOpener to deliver it" do
           expect_valid_sg_api_get_template_request(response)
           expect(lo).to have_received(:deliver!) do |arg|
-            expect(arg.html_part.to_s).to include(active_template_with_substitutions)
+            expect(arg.html_part.to_s).to include(active_template(sub))
           end
         end
       end
