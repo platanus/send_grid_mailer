@@ -2,18 +2,19 @@ require "rails_helper"
 
 describe TestMailer do
   let(:error_code) { "404" }
+  let(:success_code) { "200" }
 
   def expect_sg_api_errors(errors)
     error_messages = errors.map { |err| err['message'] }.join('. ')
     message = "Sendgrid API error. Code: #{error_code}. Errors: #{error_messages}"
     expect { deliver }.to raise_error(SendGridMailer::ApiError, message) do |e|
-      expect(e.error_code).to eq(error_code)
+      expect(e.error_code).to eq(error_code.to_i)
       expect(e.errors).to eq(errors)
     end
   end
 
   def expect_valid_sg_api_send_mail_request(request_body)
-    expect_sg_api_send_mail_request(SendGridMailer::Api::SUCCESS_CODES[:mail], request_body)
+    expect_sg_api_send_mail_request(success_code, request_body)
     deliver
   end
 
@@ -32,7 +33,7 @@ describe TestMailer do
   end
 
   def expect_valid_sg_api_get_template_request(response)
-    expect_sg_api_get_template_request(SendGridMailer::Api::SUCCESS_CODES[:template], response)
+    expect_sg_api_get_template_request(success_code, response)
     deliver
   end
 
