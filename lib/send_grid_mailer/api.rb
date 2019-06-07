@@ -31,7 +31,8 @@ module SendGridMailer
     end
 
     def response_errors(response)
-      JSON.parse(response.body)["errors"]
+      body = JSON.parse(response.body)
+      body["errors"] || [{ "message" => body["error"] }]
     end
 
     def sg_api
