@@ -26,7 +26,7 @@ module SendGridMailer
         raise SendGridMailer::ApiError.new(status_code, errors)
       end
 
-      log_api_success_response(response, api_call_type)
+      log_api_success_response(status_code, api_call_type)
       response
     end
 

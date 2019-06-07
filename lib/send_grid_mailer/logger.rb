@@ -20,35 +20,17 @@ module SendGridMailer
       log(build_definition_message(data))
     end
 
-    def log_api_success_response(response, api_call_type)
-      log(success_message(response, api_call_type))
+    def log_api_success_response(status_code, api_call_type)
+      log("Succesfully called the SendGrid API :)\nStatus Code: #{status_code}")
     end
 
     def log_api_error_response(status_code, errors, api_call_type)
-      msg = failure_message(status_code, api_call_type)
+      msg = "There was a problem calling the SendGrid API :(\nStatus Code: #{status_code}\nErrors:"
       msg += log_errors(errors)
       log(msg)
     end
 
     private
-
-    def success_message(response, api_call_type)
-      case api_call_type
-      when :mail
-        "The E-mail was successfully sent :)\nStatus Code: #{response.status_code}"
-      when :template
-        "The template was succesfully fetched :)\nStatus Code: #{response.status_code}"
-      end
-    end
-
-    def failure_message(status_code, api_call_type)
-      case api_call_type
-      when :mail
-        "The E-mail was not sent :(\nStatus Code: #{status_code}\nErrors:"
-      when :template
-        "The template was not fetched :(\nStatus Code: #{status_code}\nErrors:"
-      end
-    end
 
     def log(msg)
       Rails.logger.info("\n#{msg}")
