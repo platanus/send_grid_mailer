@@ -20,12 +20,12 @@ module SendGridMailer
       log(build_definition_message(data))
     end
 
-    def log_api_success_response(response)
-      log("The E-mail was successfully sent :)\nStatus Code: #{response.status_code}")
+    def log_api_success_response(status_code, api_call_type)
+      log("Succesfully called the SendGrid API :)\nStatus Code: #{status_code}")
     end
 
-    def log_api_error_response(status_code, errors)
-      msg = "The E-mail was not sent :(\nStatus Code: #{status_code}\nErrors:"
+    def log_api_error_response(status_code, errors, api_call_type)
+      msg = "There was a problem calling the SendGrid API :(\nStatus Code: #{status_code}\nErrors:"
       msg += log_errors(errors)
       log(msg)
     end

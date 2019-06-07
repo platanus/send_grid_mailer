@@ -78,4 +78,10 @@ class TestMailer < ApplicationMailer
     substitute "%key2%", "value2"
     mail(body: "X")
   end
+
+  def template_with_substitutions_email(value)
+    set_template_id("XXX")
+    substitute "%key%", value
+    mail(to: "r1@platan.us", body: "X")
+  end
 end

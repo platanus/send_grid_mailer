@@ -23,7 +23,7 @@ module ActionMailer
 
       define_sg_mail(headers)
 
-      SendGridMailer::Deliverer.new.deliver!(sg_definition)
+      deliverer&.new&.deliver!(sg_definition)
     end
 
     private
@@ -82,8 +82,17 @@ module ActionMailer
       @sg_definition ||= SendGridMailer::Definition.new
     end
 
+    def deliverer
+      case self.class.delivery_method
+      when :sendgrid_dev
+        SendGridMailer::DevDeliverer
+      when :sendgrid
+        SendGridMailer::Deliverer
+      end
+    end
+
     def enabled_sendgrid?
-      self.class.delivery_method == :sendgrid
+      [:sendgrid, :sendgrid_dev].include?(self.class.delivery_method)
     end
   end
 end

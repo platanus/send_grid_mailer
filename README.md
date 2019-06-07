@@ -18,7 +18,16 @@ gem "send_grid_mailer"
 bundle install
 ```
 
-In your environment file you need to add:
+We provide two delivery methods. For development environments, where sending the email is not required, you can use `:sendgrid_dev` to open it in the browser:
+
+```ruby
+config.action_mailer.delivery_method = :sendgrid_dev
+config.action_mailer.sendgrid_settings = {
+  api_key: "YOUR-SENDGRID-API-KEY"
+}
+```
+
+Otherwise, you can use `:sendgrid` to actually send the email:
 
 ```ruby
 config.action_mailer.delivery_method = :sendgrid
@@ -26,6 +35,7 @@ config.action_mailer.sendgrid_settings = {
   api_key: "YOUR-SENDGRID-API-KEY"
 }
 ```
+
 
 ## Usage
 
