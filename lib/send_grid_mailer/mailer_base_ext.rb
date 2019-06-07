@@ -83,9 +83,10 @@ module ActionMailer
     end
 
     def deliverer
-      if self.class.delivery_method == :sendgrid_dev
+      case self.class.delivery_method
+      when :sendgrid_dev
         SendGridMailer::DevDeliverer
-      elsif self.class.delivery_method == :sendgrid
+      when :sendgrid
         SendGridMailer::Deliverer
       end
     end
