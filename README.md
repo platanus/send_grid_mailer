@@ -22,7 +22,7 @@ We provide two delivery methods. For development environments, where sending the
 
 ```ruby
 config.action_mailer.delivery_method = :sendgrid_dev
-config.action_mailer.sendgrid_settings = {
+config.action_mailer.sendgrid_dev_settings = {
   api_key: "YOUR-SENDGRID-API-KEY"
 }
 ```
