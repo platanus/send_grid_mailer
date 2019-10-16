@@ -46,7 +46,7 @@ module SendGridMailer
     end
 
     def mail
-      template = parsed_template.html_safe
+      template = (parsed_template || @sg_definition.mail.contents[0]['value']).html_safe
       m = Mail.new
       m.html_part = template
       m.subject = @sg_definition.personalization.subject
