@@ -544,35 +544,70 @@ describe TestMailer do
       end
 
       context "with succesful response" do
-        def active_template(sub = "%key%")
-          "<h1>Active version</h1>"\
-          "<span>This should be replaced: #{sub}</span>"\
-          "<span>This should not be replaced: %key2%</span>"
-        end
-
-        let(:response) { {
-          versions: [
-            {
-              active: 1,
-              html_content: active_template
-            }, 
-            {
-              active: 0,
-              html_content: ''
-            }, 
-          ]
-        }.to_json}
         let(:lo) { double(deliver!: nil) }
 
-        before do
-          allow(LetterOpener::DeliveryMethod).to receive(:new).and_return(lo)
+        before { allow(LetterOpener::DeliveryMethod).to receive(:new).and_return(lo) }
+
+        context 'when there are no versions but there is a rails template' do
+          let(:response) { {}.to_json }
+          let(:deliver) { described_class.rails_tpl_email.deliver_now! }
+          let(:content) do
+            "<html>\r\n  <body>\r\n    Rails Template!\r\n\r\n  </body>\r\n</html>\r\n"
+          end
+          let(:request_body) do
+            {
+              "from" =>
+                {
+                  "email" => "default-sender@platan.us"
+                },
+              "personalizations" => [
+                {
+                  "subject" => "Rails tpl email"
+                }
+              ],
+              "content" => [
+                {
+                  "type" => "text/html",
+                  "value" => content
+                }
+              ]
+            }
+          end
+
+          it "calls letter_opener with template content as html_part" do
+            expect_valid_sg_api_get_template_request(response)
+            expect(lo).to have_received(:deliver!) do |arg|
+              expect(arg.html_part.to_s).to include(content)
+            end
+          end
         end
 
-        it "gets templates form sendgrid api, applies substitutions to active one and "\
-           "uses LetterOpener to deliver it" do
-          expect_valid_sg_api_get_template_request(response)
-          expect(lo).to have_received(:deliver!) do |arg|
-            expect(arg.html_part.to_s).to include(active_template(sub))
+        context 'when there are template versions' do
+          def active_template(sub = "%key%")
+            "<h1>Active version</h1>"\
+            "<span>This should be replaced: #{sub}</span>"\
+            "<span>This should not be replaced: %key2%</span>"
+          end
+  
+          let(:response) { {
+            versions: [
+              {
+                active: 1,
+                html_content: active_template
+              }, 
+              {
+                active: 0,
+                html_content: ''
+              }, 
+            ]
+          }.to_json}
+  
+          it "gets templates form sendgrid api, applies substitutions to active one and "\
+             "uses LetterOpener to deliver it" do
+            expect_valid_sg_api_get_template_request(response)
+            expect(lo).to have_received(:deliver!) do |arg|
+              expect(arg.html_part.to_s).to include(active_template(sub))
+            end
           end
         end
       end
