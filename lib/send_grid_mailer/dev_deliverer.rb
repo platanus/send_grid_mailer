@@ -29,9 +29,10 @@ module SendGridMailer
 
     def parsed_template
       template_response = sg_api.get_template(@sg_definition)
-      template_active_version = JSON.parse(template_response.body)["versions"].find do |version|
-        version["active"] == 1
-      end
+      template_versions = JSON.parse(template_response.body)["versions"]
+      return unless template_versions.present?
+
+      template_active_version = template_versions.find { |version| version["active"] == 1 }
       template_content = template_active_version["html_content"]
       @sg_definition.personalization.substitutions.each { |k, v| template_content.gsub!(k, v) }
       template_content
@@ -45,7 +46,7 @@ module SendGridMailer
     end
 
     def mail
-      template = parsed_template.html_safe
+      template = (parsed_template || @sg_definition.mail.contents[0]['value']).html_safe
       m = Mail.new
       m.html_part = template
       m.subject = @sg_definition.personalization.subject
