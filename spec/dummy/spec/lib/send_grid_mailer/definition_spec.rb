@@ -17,7 +17,7 @@ describe SendGridMailer::Definition do
     end
 
     it "creates substitution with valid data" do
-      expect(@substitution.substitution).to eq("%subject%" => "Hi!")
+      expect(@substitution).to eq("%subject%" => "Hi!")
     end
 
     it "adds substitution to personalization object" do
