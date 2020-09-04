@@ -30,6 +30,30 @@ describe SendGridMailer::Definition do
     end
   end
 
+  describe "#dynamic_template_data" do
+    before do
+      @substitution = subject.dynamic_template_data(key: 'value')
+    end
+
+    it "creates substitution with valid data" do
+      expect(@substitution).to eq(key: 'value')
+    end
+
+    it "adds substitution to personalization object" do
+      expect(personalization.dynamic_template_data.size).to eq(1)
+    end
+
+    it "add dynamic_data to data hash" do
+      subject.dynamic_template_data(other_key: 'other_value')
+      expect(personalization.dynamic_template_data.size).to eq(2)
+    end
+
+    it "merges new keys into dynamic_data hash" do
+      subject.dynamic_template_data(other_key: 'other_value')
+      expect(personalization.dynamic_template_data).to eq(key: 'value', other_key: 'other_value')
+    end
+  end
+
   describe "#set_sender" do
     it "adds sender to mail object" do
       subject.set_sender("sender@platan.us")
