@@ -120,6 +120,14 @@ describe SendGridMailer::Definition do
     end
   end
 
+  describe "#add_category" do
+    it "adds categories to mail object" do
+      subject.add_category("category1")
+      subject.add_category("category2")
+      expect(mail.categories).to eq(["category1", "category2"])
+    end
+  end
+
   describe "#add_attachment" do
     it "adds file to mail object" do
       file = File.read(fixture_file_upload("image.png", "image/png"))
