@@ -9,7 +9,8 @@ module SendGridMailer
       :set_subject,
       :set_content,
       :add_attachment,
-      :add_header
+      :add_header,
+      :add_category
     ]
 
     def substitute(key, value, default = "")
@@ -70,6 +71,11 @@ module SendGridMailer
     def add_header(key, value)
       return if !key || !value
       personalization.add_header(SendGrid::Header.new(key: key, value: value))
+    end
+
+    def add_category(value)
+      return unless value
+      mail.add_category(SendGrid::Category.new(name: value))
     end
 
     def to_json
