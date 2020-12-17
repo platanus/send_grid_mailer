@@ -3,7 +3,7 @@ module SendGridMailer
     include InterceptorsHandler
     include Logger
     require "letter_opener"
-    require 'handlebars'
+    require "handlebars"
 
     def deliver!(sg_definition)
       @sg_definition = sg_definition
@@ -29,7 +29,9 @@ module SendGridMailer
     end
 
     def dev_emails_location
-      ENV['DEV_EMAILS_LOCATION'] || '/tmp/mails'
+      Rails.application.config.action_mailer.sendgrid_dev_settings[:emails_location] || "/tmp/mails"
+    rescue
+      "/tmp/mails"
     end
 
     def parsed_template
