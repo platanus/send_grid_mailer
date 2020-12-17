@@ -24,7 +24,11 @@ module SendGridMailer
     end
 
     def letter_opener_delivery_method
-      @letter_opener_delivery_method ||= LetterOpener::DeliveryMethod.new(location: '/tmp/mails')
+      @letter_opener_delivery_method ||= LetterOpener::DeliveryMethod.new(location: dev_emails_location)
+    end
+
+    def dev_emails_location
+      ENV['DEV_EMAILS_LOCATION'] || '/tmp/mails'
     end
 
     def parsed_template
