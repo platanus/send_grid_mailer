@@ -84,4 +84,10 @@ class TestMailer < ApplicationMailer
     substitute "%key%", value
     mail(to: "r1@platan.us", body: "X")
   end
+
+  def dynamic_template_email(value)
+    set_template_id("XXX")
+    dynamic_template_data(key: value)
+    mail(to: "r1@platan.us")
+  end
 end
