@@ -3,6 +3,7 @@ module SendGridMailer
     include InterceptorsHandler
     include Logger
     require "letter_opener"
+    require 'handlebars'
 
     def deliver!(sg_definition)
       @sg_definition = sg_definition
@@ -39,6 +40,8 @@ module SendGridMailer
       template_active_version = template_versions.find { |version| version["active"] == 1 }
       template_content = template_active_version["html_content"]
       @sg_definition.personalization.substitutions.each { |k, v| template_content.gsub!(k, v) }
+      template = Handlebars::Context.new.compile(template_content)
+      template_content = template.call(@sg_definition.personalization.dynamic_template_data)
       template_content
     end
 
