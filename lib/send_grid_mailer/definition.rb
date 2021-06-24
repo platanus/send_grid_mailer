@@ -2,19 +2,25 @@ module SendGridMailer
   class Definition
     METHODS = [
       :substitute,
+      :dynamic_template_data,
       :set_template_id,
       :set_sender,
       :set_recipients,
       :set_subject,
       :set_content,
       :add_attachment,
-      :add_header
+      :add_header,
+      :add_category
     ]
 
     def substitute(key, value, default = "")
-      personalization.substitutions = SendGrid::Substitution.new(
+      personalization.add_substitution(SendGrid::Substitution.new(
         key: key, value: value.to_s || default
-      )
+      ))
+    end
+
+    def dynamic_template_data(object)
+      personalization.add_dynamic_template_data(object)
     end
 
     def set_template_id(value)
@@ -37,7 +43,7 @@ module SendGridMailer
     def set_recipients(mode, *emails)
       emails.flatten.each do |email|
         next unless email
-        personalization.send("#{mode}=", SendGrid::Email.new(email: email))
+        personalization.send("add_#{mode}", SendGrid::Email.new(email: email))
       end
     end
 
@@ -49,7 +55,7 @@ module SendGridMailer
     def set_content(value, type = nil)
       return unless value
       type = "text/plain" unless type
-      mail.contents = SendGrid::Content.new(type: type, value: value)
+      mail.add_content(SendGrid::Content.new(type: type, value: value))
     end
 
     def add_attachment(file, name, type, disposition = "inline", content_id = nil)
@@ -59,16 +65,21 @@ module SendGridMailer
       attachment.filename = name
       attachment.disposition = disposition
       attachment.content_id = content_id
-      mail.attachments = attachment
+      mail.add_attachment(attachment)
     end
 
     def add_header(key, value)
       return if !key || !value
-      personalization.headers = SendGrid::Header.new(key: key, value: value)
+      personalization.add_header(SendGrid::Header.new(key: key, value: value))
+    end
+
+    def add_category(value)
+      return unless value
+      mail.add_category(SendGrid::Category.new(name: value))
     end
 
     def to_json
-      mail.personalizations = personalization if personalization?
+      mail.add_personalization(personalization) if personalization?
       mail.to_json
     end
 
@@ -77,7 +88,7 @@ module SendGridMailer
     end
 
     def clean_recipients(mode)
-      personalization.instance_variable_set("@#{mode}s", nil)
+      personalization.instance_variable_set("@#{mode}s", [])
     end
 
     def personalization

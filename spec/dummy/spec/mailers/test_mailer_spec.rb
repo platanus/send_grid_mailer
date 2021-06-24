@@ -517,9 +517,6 @@ describe TestMailer do
   end
 
   context "when setting delivery_method to :sendgrid_dev" do
-    let(:sub) { 'value' }
-    let(:deliver) { described_class.template_with_substitutions_email(sub).deliver_now! }
-
     before { allow(TestMailer).to receive(:delivery_method).and_return(:sendgrid_dev) }
 
     context "with valid API key" do
@@ -528,6 +525,9 @@ describe TestMailer do
       end
 
       context "with unsuccessful response" do
+        let(:sub) { 'value' }
+        let(:deliver) { described_class.template_with_substitutions_email(sub).deliver_now! }
+
         it "raises sendgrid mailer error" do
           errors = [
             {
@@ -583,30 +583,68 @@ describe TestMailer do
         end
 
         context 'when there are template versions' do
-          def active_template(sub = "%key%")
-            "<h1>Active version</h1>"\
-            "<span>This should be replaced: #{sub}</span>"\
-            "<span>This should not be replaced: %key2%</span>"
+          context "when using substitutions" do
+            let(:sub) { 'value' }
+            let(:deliver) { described_class.template_with_substitutions_email(sub).deliver_now! }
+            let(:response) do
+              {
+                versions: [
+                  {
+                    active: 1,
+                    html_content: active_template
+                  },
+                  {
+                    active: 0,
+                    html_content: ''
+                  }
+                ]
+              }.to_json
+            end
+
+            def active_template(sub = "%key%")
+              "<h1>Active version</h1>"\
+              "<span>This should be replaced: #{sub}</span>"\
+              "<span>This should not be replaced: %key2%</span>"
+            end
+
+            it "gets templates from sendgrid api, applies substitutions to active one and "\
+               "uses LetterOpener to deliver it" do
+              expect_valid_sg_api_get_template_request(response)
+              expect(lo).to have_received(:deliver!) do |arg|
+                expect(arg.html_part.to_s).to include(active_template(sub))
+              end
+            end
           end
-  
-          let(:response) { {
-            versions: [
+
+          context "when using dynamic templates" do
+            let(:data) { 'value' }
+            let(:deliver) { described_class.dynamic_template_email(data).deliver_now! }
+            let(:response) do
               {
-                active: 1,
-                html_content: active_template
-              }, 
-              {
-                active: 0,
-                html_content: ''
-              }, 
-            ]
-          }.to_json}
-  
-          it "gets templates form sendgrid api, applies substitutions to active one and "\
-             "uses LetterOpener to deliver it" do
-            expect_valid_sg_api_get_template_request(response)
-            expect(lo).to have_received(:deliver!) do |arg|
-              expect(arg.html_part.to_s).to include(active_template(sub))
+                versions: [
+                  {
+                    active: 1,
+                    html_content: active_dynamic_template
+                  },
+                  {
+                    active: 0,
+                    html_content: ''
+                  }
+                ]
+              }.to_json
+            end
+
+            def active_dynamic_template(data = "{{key}}")
+              "<h1>Active dynamic version</h1>"\
+              "<span>This should be replaced: #{data}</span>"
+            end
+
+            it "gets templates from sendgrid api, applies dynamic data to active one and "\
+               "uses LetterOpener to deliver it" do
+              expect_valid_sg_api_get_template_request(response)
+              expect(lo).to have_received(:deliver!) do |arg|
+                expect(arg.html_part.to_s).to include(active_dynamic_template(data))
+              end
             end
           end
         end

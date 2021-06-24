@@ -17,7 +17,7 @@ describe SendGridMailer::Definition do
     end
 
     it "creates substitution with valid data" do
-      expect(@substitution.substitution).to eq("%subject%" => "Hi!")
+      expect(@substitution).to eq("%subject%" => "Hi!")
     end
 
     it "adds substitution to personalization object" do
@@ -27,6 +27,30 @@ describe SendGridMailer::Definition do
     it "adds substitution to collection" do
       subject.substitute("%body%", "blah")
       expect(personalization.substitutions.size).to eq(2)
+    end
+  end
+
+  describe "#dynamic_template_data" do
+    before do
+      @substitution = subject.dynamic_template_data(key: 'value')
+    end
+
+    it "creates substitution with valid data" do
+      expect(@substitution).to eq(key: 'value')
+    end
+
+    it "adds substitution to personalization object" do
+      expect(personalization.dynamic_template_data.size).to eq(1)
+    end
+
+    it "add dynamic_data to data hash" do
+      subject.dynamic_template_data(other_key: 'other_value')
+      expect(personalization.dynamic_template_data.size).to eq(2)
+    end
+
+    it "merges new keys into dynamic_data hash" do
+      subject.dynamic_template_data(other_key: 'other_value')
+      expect(personalization.dynamic_template_data).to eq(key: 'value', other_key: 'other_value')
     end
   end
 
@@ -93,6 +117,14 @@ describe SendGridMailer::Definition do
       subject.add_header("HEADER1", "VALUE1")
       subject.add_header("HEADER2", "VALUE2")
       expect(personalization.headers).to eq("HEADER1" => "VALUE1", "HEADER2" => "VALUE2")
+    end
+  end
+
+  describe "#add_category" do
+    it "adds categories to mail object" do
+      subject.add_category("category1")
+      subject.add_category("category2")
+      expect(mail.categories).to eq(["category1", "category2"])
     end
   end
 

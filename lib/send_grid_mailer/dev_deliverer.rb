@@ -3,6 +3,7 @@ module SendGridMailer
     include InterceptorsHandler
     include Logger
     require "letter_opener"
+    require "handlebars"
 
     def deliver!(sg_definition)
       @sg_definition = sg_definition
@@ -24,7 +25,13 @@ module SendGridMailer
     end
 
     def letter_opener_delivery_method
-      @letter_opener_delivery_method ||= LetterOpener::DeliveryMethod.new(location: '/tmp/mails')
+      @letter_opener_delivery_method ||= LetterOpener::DeliveryMethod.new(location: dev_emails_location)
+    end
+
+    def dev_emails_location
+      Rails.application.config.action_mailer.sendgrid_dev_settings[:emails_location] || "/tmp/mails"
+    rescue
+      "/tmp/mails"
     end
 
     def parsed_template
@@ -35,6 +42,8 @@ module SendGridMailer
       template_active_version = template_versions.find { |version| version["active"] == 1 }
       template_content = template_active_version["html_content"]
       @sg_definition.personalization.substitutions.each { |k, v| template_content.gsub!(k, v) }
+      template = Handlebars::Context.new.compile(template_content)
+      template_content = template.call(@sg_definition.personalization.dynamic_template_data)
       template_content
     end
 
