@@ -169,6 +169,28 @@ class TestMailer < ApplicationMailer
 end
 ```
 
+#### Set Dynamic Template Data
+
+```ruby
+class TestMailer < ApplicationMailer
+  def my_email
+    dynamic_template_data({ key1: "value1", key2: "value2" })
+    mail
+  end
+end
+```
+
+#### Add Category
+
+```ruby
+class TestMailer < ApplicationMailer
+  def my_email
+    add_category("value")
+    mail
+  end
+end
+```
+
 > Remember: you need to specify al least: `body`, `template_id` or a Rails template.
 
 ## Recipient Interceptor
