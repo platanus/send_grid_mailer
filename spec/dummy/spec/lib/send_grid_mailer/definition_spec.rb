@@ -1,23 +1,22 @@
 require "rails_helper"
 
 describe SendGridMailer::Definition do
-  let(:personalization) { subject.send(:personalization) }
-  let(:mail) { subject.send(:mail) }
+  let(:definition) { described_class.new }
+  let(:personalization) { definition.send(:personalization) }
+  let(:mail) { definition.send(:mail) }
 
   describe "#template_id" do
     it "sets tempalte id in sengrid mail object" do
-      subject.set_template_id("X")
+      definition.set_template_id("X")
       expect(mail.template_id).to eq("X")
     end
   end
 
   describe "#substitute" do
-    before do
-      @substitution = subject.substitute("%subject%", "Hi!")
-    end
+    let!(:substitution) { definition.substitute("%definition%", "Hi!") }
 
     it "creates substitution with valid data" do
-      expect(@substitution).to eq("%subject%" => "Hi!")
+      expect(substitution).to eq("%definition%" => "Hi!")
     end
 
     it "adds substitution to personalization object" do
@@ -25,18 +24,16 @@ describe SendGridMailer::Definition do
     end
 
     it "adds substitution to collection" do
-      subject.substitute("%body%", "blah")
+      definition.substitute("%body%", "blah")
       expect(personalization.substitutions.size).to eq(2)
     end
   end
 
   describe "#dynamic_template_data" do
-    before do
-      @substitution = subject.dynamic_template_data(key: 'value')
-    end
+    let!(:substitution) { definition.dynamic_template_data(key: 'value') }
 
     it "creates substitution with valid data" do
-      expect(@substitution).to eq(key: 'value')
+      expect(substitution).to eq(key: 'value')
     end
 
     it "adds substitution to personalization object" do
@@ -44,26 +41,26 @@ describe SendGridMailer::Definition do
     end
 
     it "add dynamic_data to data hash" do
-      subject.dynamic_template_data(other_key: 'other_value')
+      definition.dynamic_template_data(other_key: 'other_value')
       expect(personalization.dynamic_template_data.size).to eq(2)
     end
 
     it "merges new keys into dynamic_data hash" do
-      subject.dynamic_template_data(other_key: 'other_value')
+      definition.dynamic_template_data(other_key: 'other_value')
       expect(personalization.dynamic_template_data).to eq(key: 'value', other_key: 'other_value')
     end
   end
 
   describe "#set_sender" do
     it "adds sender to mail object" do
-      subject.set_sender("sender@platan.us")
+      definition.set_sender("sender@platan.us")
       expect(mail.from).to eq("email" => "sender@platan.us")
     end
   end
 
   describe "#set_sender" do
     it "adds sender with format to mail object" do
-      subject.set_sender("Sender Name <sender@platan.us>")
+      definition.set_sender("Sender Name <sender@platan.us>")
       expect(mail.from).to eq("email" => "sender@platan.us", "name" => "Sender Name")
     end
   end
@@ -73,65 +70,65 @@ describe SendGridMailer::Definition do
     let(:m2) { "ldlsegovia@gmail.com" }
 
     it "adds recipients using splat operator" do
-      subject.set_recipients(:to, m1, m2)
+      definition.set_recipients(:to, m1, m2)
       expect(personalization.tos).to eq([{ "email" => m1 }, { "email" => m2 }])
     end
 
     it "adds recipients passing emails array" do
-      subject.set_recipients(:to, [m1, m2])
+      definition.set_recipients(:to, [m1, m2])
       expect(personalization.tos).to eq([{ "email" => m1 }, { "email" => m2 }])
     end
 
     it "adds bcc recipient" do
-      subject.set_recipients(:bcc, m1)
+      definition.set_recipients(:bcc, m1)
       expect(personalization.bccs).to eq([{ "email" => m1 }])
     end
 
     it "adds cc recipient" do
-      subject.set_recipients(:cc, m1)
+      definition.set_recipients(:cc, m1)
       expect(personalization.ccs).to eq([{ "email" => m1 }])
     end
   end
 
-  describe "#set_subject" do
-    it "adds subject to personalization object" do
-      subject.set_subject("Hi!")
+  describe "#set_definition" do
+    it "adds definition to personalization object" do
+      definition.set_subject("Hi!")
       expect(personalization.subject).to eq("Hi!")
     end
   end
 
   describe "#set_content" do
     it "adds content to mail object" do
-      subject.set_content("X")
+      definition.set_content("X")
       expect(mail.contents).to eq([{ "type" => "text/plain", "value" => "X" }])
     end
 
     it "adds content with different type" do
-      subject.set_content("X", "other/type")
+      definition.set_content("X", "other/type")
       expect(mail.contents).to eq([{ "type" => "other/type", "value" => "X" }])
     end
   end
 
   describe "#add_header" do
     it "adds headers to personalization object" do
-      subject.add_header("HEADER1", "VALUE1")
-      subject.add_header("HEADER2", "VALUE2")
+      definition.add_header("HEADER1", "VALUE1")
+      definition.add_header("HEADER2", "VALUE2")
       expect(personalization.headers).to eq("HEADER1" => "VALUE1", "HEADER2" => "VALUE2")
     end
   end
 
   describe "#add_category" do
     it "adds categories to mail object" do
-      subject.add_category("category1")
-      subject.add_category("category2")
+      definition.add_category("category1")
+      definition.add_category("category2")
       expect(mail.categories).to eq(["category1", "category2"])
     end
   end
 
   describe "#add_attachment" do
     it "adds file to mail object" do
-      file = File.read(fixture_file_upload("image.png", "image/png"))
-      subject.add_attachment(file, "platanus.png", "image/png")
+      file = File.read(fixture_file_upload("spec/dummy/spec/assets/image.png"))
+      definition.add_attachment(file, "platanus.png", "image/png")
       attachment = mail.attachments.first
       expect(attachment["type"]).to match("image/png")
       expect(attachment["disposition"]).to match("inline")

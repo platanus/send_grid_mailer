@@ -14,9 +14,9 @@ module SendGridMailer
     ]
 
     def substitute(key, value, default = "")
-      personalization.add_substitution(SendGrid::Substitution.new(
-        key: key, value: value.to_s || default
-      ))
+      personalization.add_substitution(
+        SendGrid::Substitution.new(key: key, value: value.to_s || default)
+      )
     end
 
     def dynamic_template_data(object)
@@ -25,11 +25,13 @@ module SendGridMailer
 
     def set_template_id(value)
       return unless value
+
       mail.template_id = value
     end
 
     def set_sender(email)
       return unless email
+
       matched_format = email.match(/<(.+)>/)
       if matched_format
         address = matched_format[1]
@@ -43,18 +45,21 @@ module SendGridMailer
     def set_recipients(mode, *emails)
       emails.flatten.each do |email|
         next unless email
+
         personalization.send("add_#{mode}", SendGrid::Email.new(email: email))
       end
     end
 
     def set_subject(value)
       return unless value
+
       personalization.subject = value
     end
 
     def set_content(value, type = nil)
       return unless value
-      type = "text/plain" unless type
+
+      type ||= "text/plain"
       mail.add_content(SendGrid::Content.new(type: type, value: value))
     end
 
@@ -70,11 +75,13 @@ module SendGridMailer
 
     def add_header(key, value)
       return if !key || !value
+
       personalization.add_header(SendGrid::Header.new(key: key, value: value))
     end
 
     def add_category(value)
       return unless value
+
       mail.add_category(SendGrid::Category.new(name: value))
     end
 
@@ -97,12 +104,12 @@ module SendGridMailer
 
     def personalization?; !personalization.to_json.empty? end
 
-    def content?; !mail.contents.blank? end
+    def content?; mail.contents.present? end
 
-    def sender?; !mail.from.blank? end
+    def sender?; mail.from.present? end
 
-    def subject?; !personalization.subject.blank? end
+    def subject?; personalization.subject.present? end
 
-    def template_id?; !mail.template_id.blank? end
+    def template_id?; mail.template_id.present? end
   end
 end

@@ -1,11 +1,10 @@
-require: rubocop-rspec
 AllCops:
   Exclude:
   - "vendor/**/*"
   - "db/**/*"
   - "bin/**/*"
   DisplayCopNames: false
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.6
 Rails:
   Enabled: true
 Layout/AlignParameters:
@@ -198,7 +197,6 @@ Style/WordArray:
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#percent-w
   Enabled: false
   MinSize: 0
-  WordRegex: !ruby/regexp /\A[\p{Word}]+\z/
 Metrics/AbcSize:
   Description: A calculated magnitude based on number of assignments, branches, and
     conditions.
@@ -478,14 +476,3 @@ Performance/RedundantBlockCall:
   Description: Use `yield` instead of `block.call`.
   Reference: https://github.com/JuanitoFatas/fast-ruby#proccall-vs-yield-code
   Enabled: false
-RSpec/MultipleExpectations:
-  Max: 5
-RSpec/NestedGroups:
-  Max: 5
-RSpec/ExampleLength:
-  Max: 10
-RSpec/LetSetup:
-  Enabled: false
-RSpec/ExpectChange:
-  Enabled: true
-  EnforcedStyle: block

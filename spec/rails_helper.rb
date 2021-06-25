@@ -30,19 +30,17 @@ ActiveRecord::Migration.maintain_test_schema!
 
 Dir[::Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
+FactoryBot.definition_file_paths = ["#{::Rails.root}/spec/factories"]
+FactoryBot.find_definitions
+
 RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/assets"
-  config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
 
-  FactoryBot.definition_file_paths = ["#{::Rails.root}/spec/factories"]
-  FactoryBot.find_definitions
-
   config.include FactoryBot::Syntax::Methods
   config.include ActionDispatch::TestProcess
-  config.include TestHelpers
 end

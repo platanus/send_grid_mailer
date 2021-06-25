@@ -19,15 +19,19 @@ Gem::Specification.new do |s|
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.test_files = Dir["spec/**/*"]
 
+  s.add_dependency "handlebars", "~> 0.8.0"
+  s.add_dependency "letter_opener", "~> 1.7.0"
   s.add_dependency "rails", ">= 4.2.0"
   s.add_dependency "sendgrid-ruby", "~> 5", ">= 5.3.0"
-  s.add_dependency "letter_opener", "~> 1.7.0"
-  s.add_dependency "handlebars", "~> 0.8.0"
+
+  s.add_development_dependency "coveralls"
+  s.add_development_dependency "factory_bot_rails"
+  s.add_development_dependency "guard-rspec", "~> 4.7"
   s.add_development_dependency "pry"
   s.add_development_dependency "pry-rails"
-  s.add_development_dependency "sqlite3", "~> 1.4"
   s.add_development_dependency "rspec-rails", "~> 3.5.0"
-  s.add_development_dependency "guard-rspec", "~> 4.7"
-  s.add_development_dependency "factory_bot_rails"
-  s.add_development_dependency "coveralls"
+  s.add_development_dependency "rspec_junit_formatter"
+  s.add_development_dependency "rubocop", "0.65.0"
+  s.add_development_dependency "rubocop-rspec"
+  s.add_development_dependency "sqlite3", "~> 1.4"
 end
