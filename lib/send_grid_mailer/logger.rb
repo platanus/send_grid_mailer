@@ -40,18 +40,20 @@ module SendGridMailer
     def build_definition_message(data)
       data = data.keys.map do |k|
         d = data[k].to_s
-        "#{k}: #{(d.blank? ? '-' : d)}"
+        "#{k}: #{d.presence || '-'}"
       end.join("\n")
     end
 
     def log_email(email)
       return if email.blank?
+
       email["email"]
     end
 
     def log_emails(personalization, origin)
       emails = personalization.send(origin)
       return if emails.blank?
+
       emails.map do |email|
         log_email(email)
       end.join(", ")
@@ -59,6 +61,7 @@ module SendGridMailer
 
     def log_attachments(mail)
       return if mail.attachments.blank?
+
       mail.attachments.map do |f|
         "\n\t#{f['filename']}"
       end.join("")
@@ -66,6 +69,7 @@ module SendGridMailer
 
     def log_contents(mail)
       return if mail.contents.blank?
+
       mail.contents.map do |content|
         "\n\ttype: #{content['type']}\n\tvalue: #{content['value']}"
       end.join("")
@@ -73,6 +77,7 @@ module SendGridMailer
 
     def log_pairs(hash)
       return if hash.blank?
+
       hash.keys.map do |k|
         "\n\t#{k} => #{hash[k]}"
       end.join("")

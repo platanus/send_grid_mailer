@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Unreleased
+
+##### Changed
+
+* Replace travis with circleci.
+
+##### Removed
+
+* Support for Ruby 2.5
+
 ### v1.2.1
 
 ##### Fixed

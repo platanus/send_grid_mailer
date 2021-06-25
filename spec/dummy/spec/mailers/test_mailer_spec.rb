@@ -94,7 +94,7 @@ describe TestMailer do
         end
       end
 
-      context "setting body" do
+      context "when setting body" do
         let(:deliver) { described_class.body_email.deliver_now! }
 
         it "sends mail with valid body" do
@@ -120,7 +120,7 @@ describe TestMailer do
         end
       end
 
-      context "setting body from params" do
+      context "when setting body from params" do
         let(:deliver) { described_class.body_params_email.deliver_now! }
 
         it "sends mail with valid body" do
@@ -146,7 +146,7 @@ describe TestMailer do
         end
       end
 
-      context "setting body from rails template" do
+      context "when setting body from rails template" do
         let(:deliver) { described_class.rails_tpl_email.deliver_now! }
 
         it "sends mail with valid body" do
@@ -172,7 +172,7 @@ describe TestMailer do
         end
       end
 
-      context "overriding default from" do
+      context "when overriding default from" do
         let(:request_body) do
           {
             "from" =>
@@ -193,7 +193,7 @@ describe TestMailer do
           }
         end
 
-        context "using params" do
+        context "when using params" do
           let(:deliver) { described_class.from_params_email.deliver_now! }
           let(:subject) { "From params email" }
 
@@ -202,7 +202,7 @@ describe TestMailer do
           end
         end
 
-        context "using methods" do
+        context "when using methods" do
           let(:deliver) { described_class.from_email.deliver_now! }
           let(:subject) { "From email" }
 
@@ -212,7 +212,7 @@ describe TestMailer do
         end
       end
 
-      context "setting recipients" do
+      context "with setting recipients" do
         let(:request_body) do
           {
             "from" =>
@@ -251,7 +251,7 @@ describe TestMailer do
           }
         end
 
-        context "using params" do
+        context "when using params" do
           let(:deliver) { described_class.recipients_params_email.deliver_now! }
           let(:subject) { "Recipients params email" }
 
@@ -260,7 +260,7 @@ describe TestMailer do
           end
         end
 
-        context "using methods" do
+        context "when using methods" do
           let(:deliver) { described_class.recipients_email.deliver_now! }
           let(:subject) { "Recipients email" }
 
@@ -270,7 +270,7 @@ describe TestMailer do
         end
       end
 
-      context "setting template id" do
+      context "when setting template id" do
         let(:request_body) do
           {
             "from" =>
@@ -286,7 +286,7 @@ describe TestMailer do
           }
         end
 
-        context "using params" do
+        context "when using params" do
           let(:deliver) { described_class.template_id_params_email.deliver_now! }
           let(:subject) { "Template id params email" }
 
@@ -295,7 +295,7 @@ describe TestMailer do
           end
         end
 
-        context "using methods" do
+        context "when using methods" do
           let(:deliver) { described_class.template_id_email.deliver_now! }
           let(:subject) { "Template id email" }
 
@@ -305,7 +305,7 @@ describe TestMailer do
         end
       end
 
-      context "setting subject" do
+      context "when setting subject" do
         let(:request_body) do
           {
             "from" =>
@@ -326,7 +326,7 @@ describe TestMailer do
           }
         end
 
-        context "using params" do
+        context "when using params" do
           let(:deliver) { described_class.subject_params_email.deliver_now! }
 
           it "sends mail with valid subject" do
@@ -334,7 +334,7 @@ describe TestMailer do
           end
         end
 
-        context "using methods" do
+        context "when using methods" do
           let(:deliver) { described_class.subject_email.deliver_now! }
 
           it "sends mail with valid subject" do
@@ -343,7 +343,7 @@ describe TestMailer do
         end
       end
 
-      context "setting headers" do
+      context "when setting headers" do
         let(:request_body) do
           {
             "from" =>
@@ -369,7 +369,7 @@ describe TestMailer do
           }
         end
 
-        context "using params" do
+        context "when using params" do
           let(:deliver) { described_class.headers_params_email.deliver_now! }
           let(:subject) { "Headers params email" }
 
@@ -378,7 +378,7 @@ describe TestMailer do
           end
         end
 
-        context "using methods" do
+        context "when using methods" do
           let(:deliver) { described_class.headers_email.deliver_now! }
           let(:subject) { "Headers email" }
 
@@ -388,7 +388,7 @@ describe TestMailer do
         end
       end
 
-      context "adding attachments" do
+      context "when adding attachments" do
         let(:deliver) { described_class.add_attachments_email.deliver_now! }
 
         it "sends mail with valid body" do
@@ -426,7 +426,7 @@ describe TestMailer do
         end
       end
 
-      context "adding substitutions" do
+      context "when adding substitutions" do
         let(:deliver) { described_class.substitutions_email.deliver_now! }
 
         it "sends mail with valid body" do
@@ -457,7 +457,7 @@ describe TestMailer do
         end
       end
 
-      context "working with recipient interceptor" do
+      context "when working with recipient interceptor" do
         let(:interceptor) { double(:interceptor, class: "RecipientInterceptor") }
         let(:deliver) { described_class.recipients_email.deliver_now! }
         let(:request_body) do

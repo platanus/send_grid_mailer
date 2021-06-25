@@ -37,7 +37,7 @@ module SendGridMailer
     def parsed_template
       template_response = sg_api.get_template(@sg_definition)
       template_versions = JSON.parse(template_response.body)["versions"]
-      return unless template_versions.present?
+      return if template_versions.blank?
 
       template_active_version = template_versions.find { |version| version["active"] == 1 }
       template_content = template_active_version["html_content"]

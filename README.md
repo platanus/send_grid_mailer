@@ -1,6 +1,6 @@
 # SendGrid Mailer
 [![Gem Version](https://badge.fury.io/rb/send_grid_mailer.svg)](https://badge.fury.io/rb/send_grid_mailer)
-[![Build Status](https://travis-ci.org/platanus/send_grid_mailer.svg?branch=master)](https://travis-ci.org/platanus/send_grid_mailer)
+[![CircleCI](https://circleci.com/gh/platanus/send_grid_mailer.svg?style=shield)](https://app.circleci.com/pipelines/github/platanus/send_grid_mailer)
 [![Coverage Status](https://coveralls.io/repos/github/platanus/send_grid_mailer/badge.svg)](https://coveralls.io/github/platanus/send_grid_mailer)
 
 Is an Action Mailer adapter for using SendGrid in a Rails application and
@@ -226,6 +226,16 @@ bundle exec guard
 ```
 
 You need to put **all your tests** in the `/send_grid_mailer/spec/dummy/spec/` directory.
+
+## Publishing
+
+On master/main branch...
+
+1. Change `VERSION` in `lib/send_grid_mailer/version.rb`.
+2. Change `Unreleased` title to current version in `CHANGELOG.md`.
+3. Commit new release. For example: `Releasing v0.1.0`.
+4. Create tag. For example: `git tag v0.1.0`.
+5. Push tag. For example: `git push origin v0.1.0`.
 
 ## Contributing
 
