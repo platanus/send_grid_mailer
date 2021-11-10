@@ -35,6 +35,8 @@ module SendGridMailer
     end
 
     def parsed_template
+      return nil if api_key.blank?
+
       template_response = sg_api.get_template(@sg_definition)
       template_versions = JSON.parse(template_response.body)["versions"]
       return if template_versions.blank?

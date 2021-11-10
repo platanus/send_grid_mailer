@@ -144,6 +144,8 @@ end
 
 #### Set SendGrid's Template
 
+To use this functionality you need to add the SENDGRID_API_KEY and, in case you do not add the api key, the gem would not search in Sendgrid for the template.
+
 ```ruby
 class TestMailer < ApplicationMailer
   def my_email
