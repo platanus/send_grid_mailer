@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### v2.0.1
+
+##### Fixed
+
+* :sendgrid_dev delivery method doesn't work with rails templates and missing api key.
+
 ### v2.0.0
 
 ##### Changed
