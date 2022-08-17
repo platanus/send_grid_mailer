@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.executables = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "handlebars", "~> 0.8.0"
+  s.add_dependency "ruby-handlebars", "~> 0.4.1"
   s.add_dependency "letter_opener", "~> 1.7.0"
   s.add_dependency "rails", ">= 4.2.0"
   s.add_dependency "sendgrid-ruby", "~> 5", ">= 5.3.0"
