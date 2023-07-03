@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### Unreleased
+
+##### Added
+
+* Add Ruby 3.2 support
+
 ### v2.2.0
 
 * :sendgrid_dev replace handlerbars library with a pure ruby implementation. [#25]
