@@ -8,6 +8,7 @@ module SendGridMailer
       :set_recipients,
       :set_subject,
       :set_content,
+      :set_unsubscribe_group,
       :add_attachment,
       :add_header,
       :add_category
@@ -27,6 +28,12 @@ module SendGridMailer
       return unless value
 
       mail.template_id = value
+    end
+
+    def set_unsubscribe_group(value, groups_to_display = [])
+      return unless value
+
+      mail.asm = SendGrid::ASM.new(group_id: value, groups_to_display: groups_to_display)
     end
 
     def set_sender(email)

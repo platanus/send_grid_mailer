@@ -11,6 +11,7 @@ module SendGridMailer
         "To" => log_emails(personalization, :tos),
         "Cc" => log_emails(personalization, :ccs),
         "Bcc" => log_emails(personalization, :bccs),
+        "ASM" => log_pairs(mail.asm.as_json),
         "Substitutions" => log_pairs(personalization.substitutions),
         "Headers" => log_pairs(personalization.headers),
         "body" => log_contents(mail),
