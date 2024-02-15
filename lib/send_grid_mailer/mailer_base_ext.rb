@@ -33,6 +33,7 @@ module ActionMailer
       set_recipients(:to, params[:to])
       set_recipients(:cc, params[:cc])
       set_recipients(:bcc, params[:bcc])
+      set_unsubscribe_group(params[:asm][:group_id], params[:asm][:groups_to_display])
       set_subject(params[:subject]) unless sg_definition.subject?
       set_body(params)
       add_attachments
