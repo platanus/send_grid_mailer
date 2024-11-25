@@ -33,6 +33,7 @@ module ActionMailer
       set_recipients(:to, params[:to])
       set_recipients(:cc, params[:cc])
       set_recipients(:bcc, params[:bcc])
+      set_reply_to(params[:reply_to]) unless sg_definition.reply_to?
       set_subject(params[:subject]) unless sg_definition.subject?
       set_body(params)
       add_attachments

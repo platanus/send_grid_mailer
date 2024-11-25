@@ -65,6 +65,7 @@ module SendGridMailer
       m.to = emails(:tos) if emails(:tos).present?
       m.cc = emails(:ccs) if emails(:ccs).present?
       m.bcc = emails(:bccs) if emails(:bccs).present?
+      m.reply_to = @sg_definition.mail.reply_to["email"] if @sg_definition.mail.reply_to.present?
 
       m
     end

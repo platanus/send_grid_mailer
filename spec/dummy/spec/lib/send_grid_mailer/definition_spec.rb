@@ -65,6 +65,13 @@ describe SendGridMailer::Definition do
     end
   end
 
+  describe "#set_reply_to" do
+    it "adds reply to to mail object" do
+      definition.set_reply_to("Sender Name <reply_to@platan.us>")
+      expect(mail.reply_to).to eq("email" => "reply_to@platan.us", "name" => "Sender Name")
+    end
+  end
+
   describe "#set_recipients" do
     let(:m1) { "leandro@platan.us" }
     let(:m2) { "ldlsegovia@gmail.com" }
