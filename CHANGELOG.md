@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### v2.4.0
+
+#### Added
+
+*  Add the set_reply_to method to enable setting the Reply-To header. [#28] thanks @m-quezada-loyola
+
 ### v2.3.0
 
 ##### Added
