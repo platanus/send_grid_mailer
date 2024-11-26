@@ -305,7 +305,52 @@ describe TestMailer do
         end
       end
 
-      context "when setting subject" do
+      context "when setting reply to" do
+        let(:request_body) do
+          {
+            "from" =>
+              {
+                "email" => "default-sender@platan.us"
+              },
+            "reply_to" => 
+              {
+                "email" => "reply-to@platan.us"
+              },
+            "personalizations" => [
+              {
+                "subject" => subject
+              }
+            ],
+            "content" => [
+              {
+                "type" => "text/plain",
+                "value" => "X"
+              }
+            ]
+          }
+        end
+        
+        context "when using methods" do
+          let(:deliver) { described_class.reply_to_email.deliver_now! }
+          let(:subject) { "Reply to email" }
+
+
+          it "sends mail with valid reply to email" do
+            expect_valid_sg_api_send_mail_request(request_body)
+          end
+        end
+
+        context "when using params" do
+          let(:deliver) { described_class.reply_to_params_email.deliver_now! }
+          let(:subject) { "Reply to params email" }
+
+          it "sends mail with valid reply to email" do
+            expect_valid_sg_api_send_mail_request(request_body)
+          end
+        end
+      end
+
+     context "when setting subject" do
         let(:request_body) do
           {
             "from" =>

@@ -48,6 +48,15 @@ class TestMailer < ApplicationMailer
     mail(template_id: "XXX")
   end
 
+  def reply_to_email
+    set_reply_to("reply-to@platan.us")
+    mail(body: "X")
+  end
+
+  def reply_to_params_email
+    mail(reply_to: "reply-to@platan.us", body: "X")
+  end
+
   def subject_email
     set_subject("My Subject")
     mail(body: "X")

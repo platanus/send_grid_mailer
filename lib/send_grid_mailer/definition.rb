@@ -6,6 +6,7 @@ module SendGridMailer
       :set_template_id,
       :set_sender,
       :set_recipients,
+      :set_reply_to,
       :set_subject,
       :set_content,
       :add_attachment,
@@ -30,16 +31,10 @@ module SendGridMailer
     end
 
     def set_sender(email)
-      return unless email
-
-      matched_format = email.match(/<(.+)>/)
-      if matched_format
-        address = matched_format[1]
-        name = email.match(/\"?([^<^\"]*)\"?\s?/)[1].strip
-        mail.from = SendGrid::Email.new(email: address, name: name)
-      else
-        mail.from = SendGrid::Email.new(email: email)
-      end
+      email_info = extract_email_and_name(email)
+      return unless email_info
+    
+      mail.from = SendGrid::Email.new(email: email_info[:email], name: email_info[:name])
     end
 
     def set_recipients(mode, *emails)
@@ -48,6 +43,13 @@ module SendGridMailer
 
         personalization.send("add_#{mode}", SendGrid::Email.new(email: email))
       end
+    end
+
+    def set_reply_to(email)
+      email_info = extract_email_and_name(email)
+      return unless email_info
+    
+      mail.reply_to = SendGrid::Email.new(email: email_info[:email], name: email_info[:name])
     end
 
     def set_subject(value)
@@ -94,6 +96,19 @@ module SendGridMailer
       @mail ||= SendGrid::Mail.new
     end
 
+    def extract_email_and_name(email)
+      return unless email
+    
+      matched_format = email.match(/<(.+)>/)
+      if matched_format
+        address = matched_format[1]
+        name = email.match(/\"?([^<^\"]*)\"?\s?/)[1].strip
+        { email: address, name: name }
+      else
+        { email: email }
+      end
+    end
+
     def clean_recipients(mode)
       personalization.instance_variable_set("@#{mode}s", [])
     end
@@ -107,6 +122,8 @@ module SendGridMailer
     def content?; mail.contents.present? end
 
     def sender?; mail.from.present? end
+
+    def reply_to?; mail.reply_to.present? end
 
     def subject?; personalization.subject.present? end
 
